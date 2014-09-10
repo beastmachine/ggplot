@@ -1,6 +1,6 @@
 package test.beastmachine.ggplot;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -9,6 +9,7 @@ public class GGPlotTest {
 	@Test
 	public void test() {
 //		fail("Not yet implemented");
+		System.out.println("test");
 	}
 
 }
