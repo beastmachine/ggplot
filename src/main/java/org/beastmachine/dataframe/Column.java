@@ -22,139 +22,155 @@ import static com.google.common.base.Preconditions.*;
  */
 public abstract class Column {
 
-
-
 	protected boolean isNumeric;
 	protected boolean isFactor;
+	protected String colName;
 	
-	public static Column getInstance(int[] data, Holder<Integer> rowHolder){
+	public boolean isNumeric(){
+		return isNumeric;
+	}
+	
+	public boolean isFactor(){
+		return isFactor;
+	}
+	
+	public String getName(){
+		return colName;
+	}
+	
+	public abstract double getValue(int index);
+	public abstract String getLabel(int index);
+	public abstract int getFactorValue(int index);
+
+	
+	public static Column getInstance(String colName, int[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnPInt(data);
+		Column toReturn = new ColumnPInt(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(Integer[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, Integer[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnOInt(data);
+		Column toReturn = new ColumnOInt(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(TIntArrayList data,
+	public static Column getInstance(String colName, TIntArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
-		Column toReturn = new ColumnLInt(data);
+		Column toReturn = new ColumnLInt(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(short[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, short[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnPShort(data);
+		Column toReturn = new ColumnPShort(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(Short[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, Short[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnOShort(data);
+		Column toReturn = new ColumnOShort(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(long[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, long[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnPLong(data);
+		Column toReturn = new ColumnPLong(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(Long[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, Long[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnOLong(data);
+		Column toReturn = new ColumnOLong(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(TLongArrayList data,
+	public static Column getInstance(String colName, TLongArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
-		Column toReturn = new ColumnLLong(data);
+		Column toReturn = new ColumnLLong(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(float[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, float[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnPFloat(data);
+		Column toReturn = new ColumnPFloat(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(Float[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, Float[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnOFloat(data);
+		Column toReturn = new ColumnOFloat(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(TFloatArrayList data,
+	public static Column getInstance(String colName, TFloatArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
-		Column toReturn = new ColumnLFloat(data);
+		Column toReturn = new ColumnLFloat(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(double[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, double[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnPDouble(data);
+		Column toReturn = new ColumnPDouble(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(Double[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, Double[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnODouble(data);
+		Column toReturn = new ColumnODouble(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(TDoubleArrayList data,
+	public static Column getInstance(String colName, TDoubleArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
-		Column toReturn = new ColumnLDouble(data);
+		Column toReturn = new ColumnLDouble(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(String[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, String[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnString(data);
+		Column toReturn = new ColumnString(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(List<String> data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, List<String> data, Holder<Integer> rowHolder){
 		int rows = data.size();
-		Column toReturn = new ColumnLString(data);
+		Column toReturn = new ColumnLString(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(boolean[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, boolean[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnPBoolean(data);
+		Column toReturn = new ColumnPBoolean(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(Boolean[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, Boolean[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnOBoolean(data);
+		Column toReturn = new ColumnOBoolean(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(byte[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, byte[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnPByte(data);
+		Column toReturn = new ColumnPByte(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(Byte[] data, Holder<Integer> rowHolder){
+	public static Column getInstance(String colName, Byte[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
-		Column toReturn = new ColumnOByte(data);
+		Column toReturn = new ColumnOByte(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
-	public static Column getInstance(TByteArrayList data,
+	public static Column getInstance(String colName, TByteArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
-		Column toReturn = new ColumnLByte(data);
+		Column toReturn = new ColumnLByte(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
@@ -170,10 +186,13 @@ public abstract class Column {
 
 	
 	private static class ColumnPInt extends Column{
+		
 		int[] data;
-		public ColumnPInt(int[] data){
+
+		public ColumnPInt(String colName, int[] data){
 			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -192,14 +211,17 @@ public abstract class Column {
 			checkArgument(false, "cannot call getFactorValue on numeric");
 			return 0;
 		}
+
 	}
 	
 	private static class ColumnOInt extends Column{
 
 		private Integer[] data;
 
-		public ColumnOInt(Integer[] colData) {
-			data = colData;
+		public ColumnOInt(String colName, Integer[] data) {
+			isNumeric = true;
+			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -226,8 +248,10 @@ public abstract class Column {
 
 		private short[] data;
 
-		public ColumnPShort(short[] colData) {
-			data = colData;
+		public ColumnPShort(String colName, short[] data) {
+			isNumeric = true;
+			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -253,8 +277,10 @@ public abstract class Column {
 
 		private Short[] data;
 
-		public ColumnOShort(Short[] colData) {
-			data = colData;
+		public ColumnOShort(String colName, Short[] data) {
+			isNumeric = true;
+			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -281,8 +307,10 @@ public abstract class Column {
 
 		private long[] data;
 
-		public ColumnPLong(long[] data) {
+		public ColumnPLong(String colName, long[] data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -308,8 +336,10 @@ public abstract class Column {
 
 		private Long[] data;
 
-		public ColumnOLong(Long[] data) {
+		public ColumnOLong(String colName, Long[] data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -336,8 +366,10 @@ public abstract class Column {
 
 		private float[] data;
 
-		public ColumnPFloat(float[] data) {
+		public ColumnPFloat(String colName, float[] data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -363,8 +395,10 @@ public abstract class Column {
 
 		private Float[] data;
 
-		public ColumnOFloat(Float[] data) {
+		public ColumnOFloat(String colName, Float[] data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -391,8 +425,10 @@ public abstract class Column {
 
 		private double[] data;
 
-		public ColumnPDouble(double[] data) {
+		public ColumnPDouble(String colName, double[] data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -417,8 +453,10 @@ public abstract class Column {
 
 		private Double[] data;
 
-		public ColumnODouble(Double[] data) {
+		public ColumnODouble(String colName, Double[] data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -444,13 +482,14 @@ public abstract class Column {
 	private static class ColumnString extends Column {
 		private HashMap<String, Integer> mapping;
 		private String[] data;
-		public ColumnString(String[] data) {
+		public ColumnString(String colName, String[] data) {
+			isFactor = true;
+			this.colName = colName;
 			mapping = new HashMap<String, Integer>();
 			int soFar = 0;
 			for(String s: data){
 				if(s == null){
 					mapping.put("null", soFar++);
-					
 					continue;
 				}
 				checkState(!s.equals("null"), 
@@ -485,8 +524,10 @@ public abstract class Column {
 
 		private boolean[] data;
 
-		public ColumnPBoolean(boolean[] data) {
+		public ColumnPBoolean(String colName, boolean[] data) {
+			isFactor = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -511,8 +552,10 @@ public abstract class Column {
 
 		private Boolean[] data;
 
-		public ColumnOBoolean(Boolean[] data) {
+		public ColumnOBoolean(String colName, Boolean[] data) {
+			isFactor = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -539,8 +582,10 @@ public abstract class Column {
 
 		private byte[] data;
 
-		public ColumnPByte(byte[] data) {
+		public ColumnPByte(String colName, byte[] data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -565,8 +610,10 @@ public abstract class Column {
 
 		private Byte[] data;
 
-		public ColumnOByte(Byte[] data) {
+		public ColumnOByte(String colName, Byte[] data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -592,7 +639,10 @@ public abstract class Column {
 
 		private HashMap<String, Integer> mapping;
 		private List<String> data;
-		public ColumnLString(List<String> data) {
+		
+		public ColumnLString(String colName, List<String> data) {
+			isFactor = true;
+			this.colName = colName;
 			mapping = new HashMap<String, Integer>();
 			int soFar = 0;
 			for(String s: data){
@@ -632,8 +682,10 @@ public abstract class Column {
 
 		private TIntArrayList data;
 
-		public ColumnLInt(TIntArrayList data) {
+		public ColumnLInt(String colName, TIntArrayList data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -659,8 +711,10 @@ public abstract class Column {
 
 		private TByteArrayList data;
 
-		public ColumnLByte(TByteArrayList data) {
+		public ColumnLByte(String colName, TByteArrayList data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -687,8 +741,10 @@ public abstract class Column {
 
 		private TFloatArrayList data;
 
-		public ColumnLFloat(TFloatArrayList data) {
+		public ColumnLFloat(String colName, TFloatArrayList data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -714,8 +770,10 @@ public abstract class Column {
 
 		private TDoubleArrayList data;
 
-		public ColumnLDouble(TDoubleArrayList data) {
+		public ColumnLDouble(String colName, TDoubleArrayList data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -740,8 +798,10 @@ public abstract class Column {
 
 		private TLongArrayList data;
 
-		public ColumnLLong(TLongArrayList data) {
+		public ColumnLLong(String colName, TLongArrayList data) {
+			isNumeric = true;
 			this.data = data;
+			this.colName = colName;
 		}
 
 		@Override
@@ -763,17 +823,6 @@ public abstract class Column {
 
 	}
 
-	
-	public boolean isNumeric(){
-		return isNumeric;
-	}
-	
-	public boolean isFactor(){
-		return isFactor;
-	}
-	
-	public abstract double getValue(int index);
-	public abstract String getLabel(int index);
-	public abstract int getFactorValue(int index);
+
 	
 }
