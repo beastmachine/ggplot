@@ -1,12 +1,5 @@
 /**
- * A direct copy of org.freehep.graphicsio.pdf.PDFGraphics2D, with a few
- * customizations.
- * 
- *  1) Added custom page size capabilities. FreeHEP builds this into its
- *     postscript brush, PSGraphics2D but leaves it out for PDFs.
- *  2) Parametrized list and map types.
  */
-// Copyright 2000-2007, FreeHEP
 package org.beastmachine.ggplot.pdf;
 
 import java.awt.BasicStroke;
@@ -61,6 +54,14 @@ import org.freehep.graphicsio.pdf.PDFWriter;
 import org.freehep.graphicsio.pdf.*;
 
 /**
+ * <p>A direct copy of <code>org.freehep.graphicsio.pdf.PDFGraphics2D</code>,
+ * with a few customizations.</p>
+ * <ol>
+ *  <li>Added custom page size capabilities. FreeHEP builds this into its
+ *     postscript brush, PSGraphics2D but leaves it out for PDFs.</li>
+ *  <li>Parametrized list and map types.</li>
+ * </ol>
+ * 
  * Implementation of <tt>VectorGraphics</tt> that writes the output to a PDF
  * file. Users of this class have to generate a <tt>PDFWriter</tt> and create
  * an instance by invoking the factory method or the constructor. Document
@@ -114,6 +115,9 @@ MultiPageDocument, FontUtilities.ShowString {
 
   public static final String PAGE_MARGINS = rootKey + "."
       + PageConstants.PAGE_MARGINS;
+
+  public static final String CUSTOM_PAGE_MARGINS = rootKey + "."
+      + "Custom PageMargin";
 
   public static final String ORIENTATION = rootKey + "."
       + PageConstants.ORIENTATION;
@@ -515,6 +519,20 @@ MultiPageDocument, FontUtilities.ShowString {
         return result;
   }
 
+  private Insets getMargins() {
+    String marginsProperty = getProperty(PAGE_MARGINS);
+    Insets result = CUSTOM_PAGE_MARGINS.equals(marginsProperty) ?
+        getPropertyInsets(CUSTOM_PAGE_MARGINS) :
+          PageConstants.getMargins(
+              getPropertyInsets(PAGE_MARGINS), getProperty(ORIENTATION));
+
+        if (result == null) {
+          result = PageConstants.getMargins(PageConstants.SMALL);
+        }
+
+        return result;
+  }
+
   public void openPage(Dimension size, String title) throws IOException {
     openPage(size, title, null);
   }
@@ -569,8 +587,7 @@ MultiPageDocument, FontUtilities.ShowString {
     pageTrafo.scale(1, -1);
 
     Dimension pageSize = getPageSize();
-    Insets margins = PageConstants.getMargins(
-        getPropertyInsets(PAGE_MARGINS), getProperty(ORIENTATION));
+    Insets margins = getMargins();
     pageTrafo
     .translate(margins.left, -(pageSize.getHeight() - margins.top));
 
@@ -1011,16 +1028,14 @@ MultiPageDocument, FontUtilities.ShowString {
 
   private double getWidth() {
     Dimension pageSize = getPageSize();
-    Insets margins = PageConstants.getMargins(
-        getPropertyInsets(PAGE_MARGINS), getProperty(ORIENTATION));
-    return pageSize.getWidth() - margins.left - margins.right;
+    Insets margins = getMargins();
+    return pageSize.width - margins.left - margins.right;
   }
 
   private double getHeight() {
     Dimension pageSize = getPageSize();
-    Insets margins = PageConstants.getMargins(
-        getPropertyInsets(PAGE_MARGINS), getProperty(ORIENTATION));
-    return pageSize.getHeight() - margins.top - margins.bottom;
+    Insets margins = getMargins();
+    return pageSize.height - margins.top - margins.bottom;
   }
 
 }              
