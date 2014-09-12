@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.*;
  *
  */
 public abstract class Column {
-	
+
 	protected boolean isNumeric;
 	protected boolean isFactor;
 	
@@ -94,6 +94,18 @@ public abstract class Column {
 	public static Column getInstance(Boolean[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOBoolean(data);
+		return init(toReturn, rows, rowHolder);
+	}
+	
+	public static Column getInstance(byte[] data, Holder<Integer> rowHolder){
+		int rows = data.length;
+		Column toReturn = new ColumnPByte(data);
+		return init(toReturn, rows, rowHolder);
+	}
+	
+	public static Column getInstance(Byte[] data, Holder<Integer> rowHolder){
+		int rows = data.length;
+		Column toReturn = new ColumnOByte(data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
@@ -471,6 +483,61 @@ public abstract class Column {
 		public int getFactorValue(int index) {
 			if(data[index] == null) return 2;
 			return (data[index]?1:0);
+		}
+
+	}
+	
+	private static class ColumnPByte extends Column {
+
+		private byte[] data;
+
+		public ColumnPByte(byte[] data) {
+			this.data = data;
+		}
+
+		@Override
+		public double getValue(int index) {
+			return data[index];
+		}
+
+		@Override
+		public String getLabel(int index) {
+			checkState(false," cannot call getLabel on numeric");
+			return null;
+		}
+
+		@Override
+		public int getFactorValue(int index) {
+			checkState(false, " cannot call getFactorValue on numeric");
+			return 0;
+		}
+
+	}
+	
+	private static class ColumnOByte extends Column {
+
+		private Byte[] data;
+
+		public ColumnOByte(Byte[] data) {
+			this.data = data;
+		}
+
+		@Override
+		public double getValue(int index) {
+			if(data[index] == null) return Double.NaN;
+			return data[index];
+		}
+
+		@Override
+		public String getLabel(int index) {
+			checkState(false," cannot call getLabel on numeric");
+			return null;
+		}
+
+		@Override
+		public int getFactorValue(int index) {
+			checkState(false, " cannot call getFactorValue on numeric");
+			return 0;
 		}
 
 	}
