@@ -1,5 +1,11 @@
 package org.beastmachine.dataframe;
 
+import gnu.trove.list.array.TByteArrayList;
+import gnu.trove.list.array.TDoubleArrayList;
+import gnu.trove.list.array.TFloatArrayList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.list.array.TLongArrayList;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +33,13 @@ public class DataFrame {
 		return this;
 	}
 	
+	public DataFrame c(String colName, List<String> colData){
+		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
+		Column col = Column.getInstance(colData, rowHolder);
+		columnsByName.put(colName, col);
+		return this;
+	}
+	
 	public DataFrame c(String colName, int ... colData){
 		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
 		Column col = Column.getInstance(colData, rowHolder);
@@ -35,6 +48,13 @@ public class DataFrame {
 	}
 	
 	public DataFrame c(String colName, Integer ... colData){
+		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
+		Column col = Column.getInstance(colData, rowHolder);
+		columnsByName.put(colName, col);
+		return this;
+	}
+	
+	public DataFrame c(String colName, TIntArrayList colData){
 		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
 		Column col = Column.getInstance(colData, rowHolder);
 		columnsByName.put(colName, col);
@@ -55,6 +75,15 @@ public class DataFrame {
 		return this;
 	}
 	
+	public DataFrame c(String colName, TByteArrayList colData){
+		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
+		Column col = Column.getInstance(colData, rowHolder);
+		columnsByName.put(colName, col);
+		return this;
+	}
+	
+	
+	
 	public DataFrame c(String colName, float ... colData){
 		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
 		Column col = Column.getInstance(colData, rowHolder);
@@ -63,6 +92,13 @@ public class DataFrame {
 	}
 	
 	public DataFrame c(String colName, Float ... colData){
+		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
+		Column col = Column.getInstance(colData, rowHolder);
+		columnsByName.put(colName, col);
+		return this;
+	}
+	
+	public DataFrame c(String colName, TFloatArrayList colData){
 		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
 		Column col = Column.getInstance(colData, rowHolder);
 		columnsByName.put(colName, col);
@@ -83,6 +119,13 @@ public class DataFrame {
 		return this;
 	}
 	
+	public DataFrame c(String colName, TDoubleArrayList colData){
+		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
+		Column col = Column.getInstance(colData, rowHolder);
+		columnsByName.put(colName, col);
+		return this;
+	}
+	
 	public DataFrame c(String colName, long ... colData){
 		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
 		Column col = Column.getInstance(colData, rowHolder);
@@ -91,6 +134,13 @@ public class DataFrame {
 	}
 	
 	public DataFrame c(String colName, Long ... colData){
+		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
+		Column col = Column.getInstance(colData, rowHolder);
+		columnsByName.put(colName, col);
+		return this;
+	}
+	
+	public DataFrame c(String colName, TLongArrayList colData){
 		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
 		Column col = Column.getInstance(colData, rowHolder);
 		columnsByName.put(colName, col);

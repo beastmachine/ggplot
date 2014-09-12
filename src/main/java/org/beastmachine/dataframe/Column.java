@@ -1,5 +1,11 @@
 package org.beastmachine.dataframe;
 
+import gnu.trove.list.array.TByteArrayList;
+import gnu.trove.list.array.TDoubleArrayList;
+import gnu.trove.list.array.TFloatArrayList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.list.array.TLongArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +22,8 @@ import static com.google.common.base.Preconditions.*;
  */
 public abstract class Column {
 
+
+
 	protected boolean isNumeric;
 	protected boolean isFactor;
 	
@@ -28,6 +36,13 @@ public abstract class Column {
 	public static Column getInstance(Integer[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOInt(data);
+		return init(toReturn, rows, rowHolder);
+	}
+	
+	public static Column getInstance(TIntArrayList data,
+			Holder<Integer> rowHolder) {
+		int rows = data.size();
+		Column toReturn = new ColumnLInt(data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
@@ -55,6 +70,13 @@ public abstract class Column {
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	public static Column getInstance(TLongArrayList data,
+			Holder<Integer> rowHolder) {
+		int rows = data.size();
+		Column toReturn = new ColumnLLong(data);
+		return init(toReturn, rows, rowHolder);
+	}
+	
 	public static Column getInstance(float[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnPFloat(data);
@@ -64,6 +86,13 @@ public abstract class Column {
 	public static Column getInstance(Float[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOFloat(data);
+		return init(toReturn, rows, rowHolder);
+	}
+	
+	public static Column getInstance(TFloatArrayList data,
+			Holder<Integer> rowHolder) {
+		int rows = data.size();
+		Column toReturn = new ColumnLFloat(data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
@@ -79,9 +108,22 @@ public abstract class Column {
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	public static Column getInstance(TDoubleArrayList data,
+			Holder<Integer> rowHolder) {
+		int rows = data.size();
+		Column toReturn = new ColumnLDouble(data);
+		return init(toReturn, rows, rowHolder);
+	}
+	
 	public static Column getInstance(String[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnString(data);
+		return init(toReturn, rows, rowHolder);
+	}
+	
+	public static Column getInstance(List<String> data, Holder<Integer> rowHolder){
+		int rows = data.size();
+		Column toReturn = new ColumnLString(data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
@@ -106,6 +148,13 @@ public abstract class Column {
 	public static Column getInstance(Byte[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOByte(data);
+		return init(toReturn, rows, rowHolder);
+	}
+	
+	public static Column getInstance(TByteArrayList data,
+			Holder<Integer> rowHolder) {
+		int rows = data.size();
+		Column toReturn = new ColumnLByte(data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
@@ -364,7 +413,6 @@ public abstract class Column {
 		}
 
 	}
-	
 	private static class ColumnODouble extends Column {
 
 		private Double[] data;
@@ -513,7 +561,6 @@ public abstract class Column {
 		}
 
 	}
-	
 	private static class ColumnOByte extends Column {
 
 		private Byte[] data;
@@ -541,6 +588,181 @@ public abstract class Column {
 		}
 
 	}
+	private static class ColumnLString extends Column {
+
+		private HashMap<String, Integer> mapping;
+		private List<String> data;
+		public ColumnLString(List<String> data) {
+			mapping = new HashMap<String, Integer>();
+			int soFar = 0;
+			for(String s: data){
+				if(s == null){
+					mapping.put("null", soFar++);
+					continue;
+				}
+				checkState(!s.equals("null"), 
+						"string \"null\" is a keyword in ggplot java package, cannot be string in a column" );
+				if(!mapping.containsKey(s)){
+					mapping.put(s, soFar++);
+				}
+			}
+			this.data = data;
+		}
+
+		@Override
+		public double getValue(int index) {
+			checkState(false, "cannot call getValue on Factor");
+			return 0;
+		}
+
+		@Override
+		public String getLabel(int index) {
+			if(data.get(index) == null) return "null";
+			return data.get(index);
+		}
+
+		@Override
+		public int getFactorValue(int index) {
+			return mapping.get(getLabel(index));
+		}
+
+	}
+	
+	private static class ColumnLInt extends Column {
+
+		private TIntArrayList data;
+
+		public ColumnLInt(TIntArrayList data) {
+			this.data = data;
+		}
+
+		@Override
+		public double getValue(int index) {
+			return data.get(index);
+		}
+
+		@Override
+		public String getLabel(int index) {
+			checkState(false," cannot call getLabel on numeric");
+			return null;
+		}
+
+		@Override
+		public int getFactorValue(int index) {
+			checkState(false, " cannot call getFactorValue on numeric");
+			return 0;
+		}
+
+	}
+	
+	private static class ColumnLByte extends Column {
+
+		private TByteArrayList data;
+
+		public ColumnLByte(TByteArrayList data) {
+			this.data = data;
+		}
+
+		@Override
+		public double getValue(int index) {
+			return data.get(index);
+		}
+
+		@Override
+		public String getLabel(int index) {
+			checkState(false," cannot call getLabel on numeric");
+			return null;
+		}
+
+		@Override
+		public int getFactorValue(int index) {
+			checkState(false, " cannot call getFactorValue on numeric");
+			return 0;
+		}
+
+	}
+
+
+	private static class ColumnLFloat extends Column {
+
+		private TFloatArrayList data;
+
+		public ColumnLFloat(TFloatArrayList data) {
+			this.data = data;
+		}
+
+		@Override
+		public double getValue(int index) {
+			return data.get(index);
+		}
+
+		@Override
+		public String getLabel(int index) {
+			checkState(false," cannot call getLabel on numeric");
+			return null;
+		}
+
+		@Override
+		public int getFactorValue(int index) {
+			checkState(false, " cannot call getFactorValue on numeric");
+			return 0;
+		}
+
+	}
+	
+	private static class ColumnLDouble extends Column {
+
+		private TDoubleArrayList data;
+
+		public ColumnLDouble(TDoubleArrayList data) {
+			this.data = data;
+		}
+
+		@Override
+		public double getValue(int index) {
+			return data.get(index);
+		}
+
+		@Override
+		public String getLabel(int index) {
+			checkState(false," cannot call getLabel on numeric");
+			return null;
+		}
+
+		@Override
+		public int getFactorValue(int index) {
+			checkState(false, " cannot call getFactorValue on numeric");
+			return 0;
+		}
+	}
+	
+	private static class ColumnLLong extends Column {
+
+		private TLongArrayList data;
+
+		public ColumnLLong(TLongArrayList data) {
+			this.data = data;
+		}
+
+		@Override
+		public double getValue(int index) {
+			return data.get(index);
+		}
+
+		@Override
+		public String getLabel(int index) {
+			checkState(false," cannot call getLabel on numeric");
+			return null;
+		}
+
+		@Override
+		public int getFactorValue(int index) {
+			checkState(false, " cannot call getFactorValue on numeric");
+			return 0;
+		}
+
+	}
+
 	
 	public boolean isNumeric(){
 		return isNumeric;
@@ -553,6 +775,5 @@ public abstract class Column {
 	public abstract double getValue(int index);
 	public abstract String getLabel(int index);
 	public abstract int getFactorValue(int index);
-	
 	
 }
