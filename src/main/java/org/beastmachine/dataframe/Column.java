@@ -197,6 +197,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			return data[index];
 		}
 
@@ -226,6 +229,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			if(data[index] == null) return Double.NaN;
 			return data[index].intValue();
 		}
@@ -256,6 +262,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			return data[index];
 		}
 
@@ -285,6 +294,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			if(data[index] == null) return Double.NaN;
 			return data[index].doubleValue();
 		}
@@ -315,6 +327,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			return data[index];
 		}
 
@@ -344,6 +359,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			if(data[index] == null) return Double.NaN;
 			return data[index].doubleValue();
 		}
@@ -374,6 +392,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			return data[index];
 		}
 
@@ -403,6 +424,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			if(data[index] == null) return Double.NaN;
 			return data[index].doubleValue();
 		}
@@ -433,6 +457,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			return data[index];
 		}
 
@@ -461,6 +488,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			if(data[index] == null) return Double.NaN;
 			return 0;
 		}
@@ -509,6 +539,9 @@ public abstract class Column {
 
 		@Override
 		public String getLabel(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			if(data[index] == null) return "null";
 			return data[index];
 		}
@@ -538,11 +571,17 @@ public abstract class Column {
 
 		@Override
 		public String getLabel(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			return (data[index]?"True":"False");
 		}
 
 		@Override
 		public int getFactorValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			return (data[index]?1:0);
 		}
 
@@ -566,12 +605,18 @@ public abstract class Column {
 
 		@Override
 		public String getLabel(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			if(data[index] == null) return "null";
 			return (data[index]?"True":"False");
 		}
 
 		@Override
 		public int getFactorValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			if(data[index] == null) return 2;
 			return (data[index]?1:0);
 		}
@@ -590,6 +635,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			return data[index];
 		}
 
@@ -619,6 +667,9 @@ public abstract class Column {
 		@Override
 		public double getValue(int index) {
 			if(data[index] == null) return Double.NaN;
+			checkArgument(index < data.length, 
+					"attempted to access data out of range ", 
+					index, " >= ",data.length);
 			return data[index];
 		}
 
@@ -667,6 +718,9 @@ public abstract class Column {
 
 		@Override
 		public String getLabel(int index) {
+			checkArgument(index < data.size(), 
+					"attempted to access data out of range ", 
+					index, " >= ",data.size());
 			if(data.get(index) == null) return "null";
 			return data.get(index);
 		}
@@ -690,6 +744,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.size(), 
+					"attempted to access data out of range ", 
+					index, " >= ",data.size());
 			return data.get(index);
 		}
 
@@ -719,6 +776,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.size(), 
+					"attempted to access data out of range ", 
+					index, " >= ",data.size());
 			return data.get(index);
 		}
 
@@ -749,6 +809,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.size(), 
+					"attempted to access data out of range ", 
+					index, " >= ",data.size());
 			return data.get(index);
 		}
 
@@ -778,6 +841,9 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.size(), 
+					"attempted to access data out of range ", 
+					index, " >= ",data.size());
 			return data.get(index);
 		}
 
@@ -806,6 +872,7 @@ public abstract class Column {
 
 		@Override
 		public double getValue(int index) {
+			checkArgument(index < data.size(), "attempted to access data out of range ", index, " >= ",data.size());
 			return data.get(index);
 		}
 
