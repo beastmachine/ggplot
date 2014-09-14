@@ -15,7 +15,8 @@ import static com.google.common.base.Preconditions.*;
 
 
 /**
- * 
+ * The column class models a column of a data frame
+ * or the c() type vector in R.
  * 
  * @author wheaton5
  *
@@ -26,35 +27,137 @@ public abstract class Column {
 	protected boolean isFactor;
 	protected String colName;
 	
+	/**
+	 * A column can be either numeric or a factor. You can call 
+	 * getValue(i) on a numeric column to get the double representation
+	 * of the value of the i'th value of that column.
+	 * 
+	 * If a column is initialized with any of the following it will be numeric
+	 * unless asFactor(column) TODO not yet implemented has been used on it.
+	 * byte[]
+	 * Byte[]
+	 * TByteArrayList
+	 * 
+	 * short[]
+	 * Short[]
+	 * TShortArrayList
+	 * 
+	 * int[]
+	 * Integer[]
+	 * TIntArrayList
+	 * 
+	 * long[]
+	 * Long[]
+	 * TLongArrayList
+	 * 
+	 * float[]
+	 * Float[]
+	 * TFloatArrayList
+	 * 
+	 * double[]
+	 * Double[]
+	 * TDoubleArrayList
+	 * 
+	 *  
+	 * @return
+	 */
 	public boolean isNumeric(){
 		return isNumeric;
 	}
 	
+	/**
+	 * A column can either be numeric or a factor. By factor, we mean
+	 * similar to the R type "factor". A factor has "labels" and "values"
+	 * The values are integer values that index into a labels array.
+	 * The values are assigned according to the order of unique labels
+	 * in the column.
+	 * 
+	 * You cannot call getValue on a factor. Use getFactorValue.
+	 * 
+	 * If a column is initialized with any of the following it will be a factor
+	 * String[]
+	 * ArrayList<String>
+	 * boolean[]
+	 * Boolean[]
+	 * TODO not implemented BitSet
+	 * 
+	 * @return
+	 */
 	public boolean isFactor(){
 		return isFactor;
 	}
 	
+	/**
+	 * Returns the name of the column.
+	 * 
+	 * @return
+	 */
 	public String getName(){
 		return colName;
 	}
 	
+	/**
+	 * Gets the value of the index'th value of a numeric column.
+	 * Only use on numeric column (use isNumeric())
+	 * 
+	 * @param index
+	 * @return
+	 */
 	public abstract double getValue(int index);
+	
+	/**
+	 * Gets the label of the index'th value of a factor column.
+	 * Only use on factor columns (use isFactor())
+	 * @param index
+	 * @return
+	 */
 	public abstract String getLabel(int index);
+	
+	/**
+	 * Gets the integer factor value of the index'th value of a factor column.
+	 * This value is determined by the order of unique labels in the column except
+	 * for booleans in which case the value of false is 0 and true is 1 and null is 2.
+	 * 
+	 * @param index
+	 * @return
+	 */
 	public abstract int getFactorValue(int index);
 
-	
+	/**
+	 * Constructs a numeric column from an int[]
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, int[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnPInt(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from an Integer[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, Integer[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOInt(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a TIntArrayList
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, TIntArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
@@ -62,30 +165,70 @@ public abstract class Column {
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a short[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, short[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnPShort(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a Short[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, Short[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOShort(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a long[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, long[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnPLong(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a Long[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, Long[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOLong(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a TLongArrayList
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, TLongArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
@@ -93,18 +236,42 @@ public abstract class Column {
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a float[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, float[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnPFloat(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a Float[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, Float[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOFloat(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a TFloatArrayList
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, TFloatArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
@@ -112,18 +279,42 @@ public abstract class Column {
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a double[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, double[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnPDouble(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a Double[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, Double[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnODouble(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a TDoubleArrayList
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, TDoubleArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
@@ -131,42 +322,98 @@ public abstract class Column {
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a factor column from a String[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, String[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnString(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a factor column from a List<String>
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, List<String> data, Holder<Integer> rowHolder){
 		int rows = data.size();
 		Column toReturn = new ColumnLString(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a factor column from a boolean[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, boolean[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnPBoolean(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a factor column from a Boolean[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, Boolean[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOBoolean(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a byte[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, byte[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnPByte(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a Byte[]
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, Byte[] data, Holder<Integer> rowHolder){
 		int rows = data.length;
 		Column toReturn = new ColumnOByte(colName, data);
 		return init(toReturn, rows, rowHolder);
 	}
 	
+	/**
+	 * Constructs a numeric column from a TByteArrayList
+	 * 
+	 * @param colName
+	 * @param data
+	 * @param rowHolder
+	 * @return
+	 */
 	public static Column getInstance(String colName, TByteArrayList data,
 			Holder<Integer> rowHolder) {
 		int rows = data.size();
