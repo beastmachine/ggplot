@@ -37,7 +37,7 @@ public class PaintPDF {
     g.setProperties(pageSize(pointSize));
     g.setProperties(pageMargins(new Insets(0, 0, 0, 0)));
     g.startExport();
-    paint.paint2D(g);
+    paint.paint2D(g, pixelSize, pointSize);
     g.endExport();
   }
 }

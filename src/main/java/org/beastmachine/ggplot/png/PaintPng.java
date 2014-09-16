@@ -1,5 +1,7 @@
 package org.beastmachine.ggplot.png;
 
+import static java.lang.Math.round;
+
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -24,7 +26,8 @@ public class PaintPng {
     BufferedImage img =
         new BufferedImage(pixelSize.width, pixelSize.height,
             BufferedImage.TYPE_INT_RGB);
-    paint.paint2D((Graphics2D)img.getGraphics());
+    Dimension pointsSize = new Dimension((int)round(72*pixelSize.width/dpi), (int)round(72*pixelSize.height/dpi));
+    paint.paint2D((Graphics2D)img.getGraphics(), pixelSize, pointsSize);
     savePng(img, dpi, new File(outFilePath));
   }
 
