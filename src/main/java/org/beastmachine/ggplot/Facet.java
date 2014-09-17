@@ -4,10 +4,10 @@ import org.beastmachine.ggplot.visual.Paintable;
 
 public abstract class Facet implements Paintable{
 
-	private int minX;
-	private int maxX;
-	private int minY;
-	private int maxY;
+	protected int minX;
+	protected int maxX;
+	protected int minY;
+	protected int maxY;
 
 	public void setArea(int minX, int maxX, int minY,
 			int maxY){
@@ -15,6 +15,14 @@ public abstract class Facet implements Paintable{
 		this.maxX = maxX;
 		this.minY = minY;
 		this.maxY = maxY;
+	}
+	
+	public double getHeight(){
+		return maxY - minY;
+	}
+	
+	public double getWidth(){
+		return maxX - minX;
 	}
 
 }
