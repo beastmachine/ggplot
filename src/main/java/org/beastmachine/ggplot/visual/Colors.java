@@ -660,4 +660,6 @@ public class Colors {
   public static final Color yellow3 = new Color(205, 205, 0);
   public static final Color yellow4 = new Color(139, 139, 0);
   public static final Color yellowgreen = new Color(154, 205, 50);
+  
+  public static final Color invisible = new Color(255, 255, 255, 0);
 }
