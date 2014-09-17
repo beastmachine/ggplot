@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.beastmachine.ggplot.visual.Paintable;
 
-public class Ggplot implements Paintable{
+public class GGPlot implements Paintable{
 
 	private Scale myScale;
 	private Coord myCoord;
@@ -15,7 +15,7 @@ public class Ggplot implements Paintable{
 	private List<Layer> myLayers;
 	private Defaults myDefaults;
 
-	public Ggplot() {
+	public GGPlot() {
 		myDefaults = Defaults.getPrettyDefaults();
 		myLayers = new ArrayList<Layer>();
 		myFacet = new FacetNone(myDefaults);

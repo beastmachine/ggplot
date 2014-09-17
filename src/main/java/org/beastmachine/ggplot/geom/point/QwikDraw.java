@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.geom.Dimension2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -69,10 +70,10 @@ public class QwikDraw implements Paintable {
     yMax = yMid+yHalfRange;
   }
 
-  public void paint2D(Graphics2D g, Dimension pixels, Dimension points) {
+  public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
     Graphics2DState state = new Graphics2DState(g);
 
-    double pixelsPerPoint = pixels.width/(double)points.width;
+    double pixelsPerPoint = pixels.getWidth()/points.getWidth();
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g.setStroke(new BasicStroke((float)(0.75*pixelsPerPoint),BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
@@ -132,8 +133,8 @@ public class QwikDraw implements Paintable {
       for (int ii=0; ii<x.length; ii++) {
         double xi = x[ii];
         double yi = y[ii];
-        double screenX = x2screen(xi, pixels.width);
-        double screenY = y2screen(yi,pixels.height);
+        double screenX = x2screen(xi, pixels.getWidth());
+        double screenY = y2screen(yi,pixels.getHeight());
         if (shape instanceof Ellipse2D.Double) {
           screenX -= shape.getBounds().getWidth()/2;
           screenY -= shape.getBounds().getHeight()/2;
@@ -183,13 +184,13 @@ public class QwikDraw implements Paintable {
     state.restore(g);
   }
 
-  private double x2screen(double xi, int width) {
+  private double x2screen(double xi, double width) {
     double proportion = (xi-xMin)/(xMax-xMin);
     double pixel = width*proportion;
     return pixel;
   }
 
-  private double y2screen(double yi, int height) {
+  private double y2screen(double yi, double height) {
     double proportion = (yi-yMin)/(yMax-yMin);
     double pixel = height*(1-proportion);
     return pixel;
