@@ -106,6 +106,31 @@ public abstract class Column {
 	public abstract double getValue(int index);
 	
 	/**
+	 * Gets number of rows in this column
+	 * 
+	 * @return
+	 */
+	public abstract int nRows();
+	
+	/**
+	 * Gets number of rows in this column
+	 * 
+	 * @return
+	 */
+	public int length(){
+		return nRows();
+	}
+	
+	/**
+	 * Gets number of rows in this column
+	 * 
+	 * @return
+	 */
+	public int size(){
+		return nRows();
+	}
+	
+	/**
 	 * Gets the label of the index'th value of a factor column.
 	 * Only use on factor columns (use isFactor())
 	 * @param index
@@ -462,6 +487,11 @@ public abstract class Column {
 			return 0;
 		}
 
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
+
 	}
 	
 	private static class ColumnOInt extends Column{
@@ -494,6 +524,11 @@ public abstract class Column {
 			checkState(false, " cannot call getFactorValue on numeric");
 			return 0;
 		}
+
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
 		
 	}
 	
@@ -526,6 +561,11 @@ public abstract class Column {
 			checkState(false, " cannot call getFactorValue on numeric");
 			return 0;
 		}
+
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
 		
 	}
 	
@@ -559,6 +599,11 @@ public abstract class Column {
 			checkState(false, " cannot call getFactorValue on numeric");
 			return 0;
 		}
+
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
 		
 	}
 	
@@ -591,6 +636,11 @@ public abstract class Column {
 			checkState(false, " cannot call getFactorValue on numeric");
 			return 0;
 		}
+
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
 
 	}
 	
@@ -625,6 +675,11 @@ public abstract class Column {
 			return 0;
 		}
 
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
+
 	}
 
 	private static class ColumnPFloat extends Column {
@@ -656,6 +711,11 @@ public abstract class Column {
 			checkState(false, " cannot call getFactorValue on numeric");
 			return 0;
 		}
+
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
 
 	}
 
@@ -690,6 +750,11 @@ public abstract class Column {
 			return 0;
 		}
 
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
+
 	}
 	
 	private static class ColumnPDouble extends Column {
@@ -722,6 +787,11 @@ public abstract class Column {
 			return 0;
 		}
 
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
+
 	}
 	private static class ColumnODouble extends Column {
 
@@ -753,6 +823,11 @@ public abstract class Column {
 			checkState(false, " cannot call getFactorValue on numeric");
 			return 0;
 		}
+
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
 
 	}
 	
@@ -798,6 +873,11 @@ public abstract class Column {
 			return mapping.get(getLabel(index));
 		}
 
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
+
 	}
 	
 	private static class ColumnPBoolean extends Column {
@@ -831,6 +911,11 @@ public abstract class Column {
 					index, " >= ",data.length);
 			return (data[index]?1:0);
 		}
+
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
 
 	}
 	
@@ -868,6 +953,11 @@ public abstract class Column {
 			return (data[index]?1:0);
 		}
 
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
+
 	}
 	
 	private static class ColumnPByte extends Column {
@@ -900,6 +990,11 @@ public abstract class Column {
 			return 0;
 		}
 
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
+
 	}
 	private static class ColumnOByte extends Column {
 
@@ -931,6 +1026,11 @@ public abstract class Column {
 			checkState(false, " cannot call getFactorValue on numeric");
 			return 0;
 		}
+
+		@Override
+    public int nRows() {
+	    return data.length;
+    }
 
 	}
 	private static class ColumnLString extends Column {
@@ -977,6 +1077,11 @@ public abstract class Column {
 			return mapping.get(getLabel(index));
 		}
 
+		@Override
+    public int nRows() {
+	    return data.size();
+    }
+
 	}
 	
 	private static class ColumnLInt extends Column {
@@ -1009,6 +1114,11 @@ public abstract class Column {
 			return 0;
 		}
 
+		@Override
+    public int nRows() {
+	    return data.size();
+    }
+
 	}
 	
 	private static class ColumnLByte extends Column {
@@ -1040,6 +1150,11 @@ public abstract class Column {
 			checkState(false, " cannot call getFactorValue on numeric");
 			return 0;
 		}
+
+		@Override
+    public int nRows() {
+	    return data.size();
+    }
 
 	}
 
@@ -1074,6 +1189,11 @@ public abstract class Column {
 			return 0;
 		}
 
+		@Override
+    public int nRows() {
+	    return data.size();
+    }
+
 	}
 	
 	private static class ColumnLDouble extends Column {
@@ -1105,6 +1225,11 @@ public abstract class Column {
 			checkState(false, " cannot call getFactorValue on numeric");
 			return 0;
 		}
+
+		@Override
+    public int nRows() {
+	    return data.size();
+    }
 	}
 	
 	private static class ColumnLLong extends Column {
@@ -1135,8 +1260,11 @@ public abstract class Column {
 			return 0;
 		}
 
+		@Override
+    public int nRows() {
+	    return data.size();
+    }
+
 	}
 
-
-	
 }

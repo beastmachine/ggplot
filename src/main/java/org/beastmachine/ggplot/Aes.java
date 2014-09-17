@@ -1,6 +1,7 @@
 package org.beastmachine.ggplot;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
@@ -15,6 +16,10 @@ public class Aes {
   public Aes a(Aesthetic key, String val) {
     mapping.put(key, val);
     return this;
+  }
+  
+  public Set<Aesthetic> getSetAesthetics(){
+  	return mapping.keySet();
   }
 
   public String getVariable(Aesthetic aes) {

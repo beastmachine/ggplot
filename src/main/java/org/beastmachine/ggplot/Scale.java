@@ -5,27 +5,61 @@ import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 
 import org.beastmachine.dataframe.Column;
+import org.beastmachine.dataframe.DataFrame;
 import org.beastmachine.ggplot.visual.Paintable;
 import org.beastmachine.util.NumberFormatter;
+
+import com.google.common.base.Preconditions;
 
 import gnu.trove.list.array.TDoubleArrayList;
 
 public class Scale implements Paintable {
 	
+
+
 	private Transformer xTransform;
 	private Transformer yTransform;
 	private Coord myCoord;
+	private Aes aesthetic;
+	private DataFrame data;
+	private DataFrame plotData;
 
-	public Scale(Coord myCoord) {
+	public Scale(DataFrame data, Aes aesthetic, Coord myCoord) {
 	 this.myCoord = myCoord;
+	 this.aesthetic = aesthetic;
+	 this.data = data;
+	 xTransform = new IdentityTransform();
+	 yTransform = new IdentityTransform();
+	 createPlotData();
+  }
+
+	private void createPlotData() {
+	  plotData = new DataFrame();
+	  for(Aes.Aesthetic aes: aesthetic.getSetAesthetics()){
+	  	String val = aesthetic.getVariable(aes);
+	  	if(data.hasColumn(val)){
+	  		if(aes == Aes.Aesthetic.x){
+	  			plotData.c(aes.toString(), xTransform.transform(data.get(val)));
+	  		}
+	  		else if(aes == Aes.Aesthetic.y){
+	  			plotData.c(aes.toString(), yTransform.transform(data.get(val)));
+	  		}
+	  		else{
+	  			Preconditions.checkState(false, "Aesthetic ",aes," not currently supported. TODO");
+	  			plotData.c(aes.toString(), data.get(val));
+	  		}
+	  	}
+	  }
   }
 
 	public void setXTransform(Transformer trans){
 		xTransform = trans;
+		createPlotData();
 	}
 	
 	public void setYTransform(Transformer trans){
 		yTransform = trans;
+		createPlotData();
 	}
 
 
@@ -47,7 +81,7 @@ public class Scale implements Paintable {
 		return calcAxisBreaksAndLimits(minval, maxval, step);
 	}
 
-	public ArrayList<String> calcAxisBreaksAndLimits(double minval, double maxval, double step){
+	private ArrayList<String> calcAxisBreaksAndLimits(double minval, double maxval, double step){
 		/**
 		 * 
 		 * Calculates axis breaks and suggested limits.
@@ -70,7 +104,7 @@ public class Scale implements Paintable {
 		return toReturn;
 	}
 
-	public TDoubleArrayList drange(double start, double stop, double step){
+	private TDoubleArrayList drange(double start, double stop, double step){
 		/**
 		 * Compute the steps in between start and stop
 		 * Only steps which are a multiple of `step` are used.
@@ -88,10 +122,17 @@ public class Scale implements Paintable {
 	public interface Transformer{
 		public Column transform(Column c);
 	}
+	
+	public class IdentityTransform implements Transformer {
+	  @Override
+	  public Column transform(Column c) {
+		  return c; // no deep copy for memory considerations, but could be dangerous
+	  }
+  }
 
 	@Override
   public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
-	  // TODO Auto-generated method stub
+	  
 	  
   }
 

@@ -5,10 +5,13 @@ import gnu.trove.list.array.TDoubleArrayList;
 import gnu.trove.list.array.TFloatArrayList;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.list.array.TLongArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.ws.Holder;
+
+import com.google.common.base.Preconditions;
 
 /**
  * 
@@ -28,6 +31,26 @@ public class DataFrame {
 		nRows = 0;
 		columnsByName = new HashMap<String, Column>();
 	}
+	
+	/**
+	 * Gets the column with variable name var
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public Column get(String var) {
+	  return columnsByName.get(var);
+  }
+	
+	/**
+	 * Checks if this DataFrame has a column of name var
+	 * 
+	 * @param var
+	 * @return
+	 */
+	public boolean hasColumn(String var) {
+	  return columnsByName.containsKey(var);
+  }
 
 	/**
 	 * Adds a column to the DataFrame and returns that modified DataFrame
@@ -409,5 +432,22 @@ public class DataFrame {
 		columnsByName.put(colName, col);
 		return this;
 	}
+
+	public DataFrame c(String string, Column column) {
+		int rows = column.nRows();
+		if(nRows == 0){
+			nRows = rows;
+		}
+		Preconditions.checkState(nRows == rows, 
+				"Every column of dataframe must have same number rows, column ", column.getName(), " ",column.nRows()," != ", nRows);
+		Preconditions.checkState(string.equals(column.getName()),"when adding a column to a dataframe directly as a column object ",
+				"the names must be the same ", string," is not he same as ",column.getName());
+		columnsByName.put(string, column);
+		return this;
+  }
+
+
+
+
 	
 }
