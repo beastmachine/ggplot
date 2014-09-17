@@ -1,15 +1,35 @@
 package org.beastmachine.ggplot;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 
+import org.beastmachine.dataframe.Column;
+import org.beastmachine.ggplot.visual.Paintable;
 import org.beastmachine.util.NumberFormatter;
 
 import gnu.trove.list.array.TDoubleArrayList;
 
-public abstract class Scale {
+public class Scale implements Paintable {
+	
+	private Transformer xTransform;
+	private Transformer yTransform;
+	private Coord myCoord;
+
+	public Scale(Coord myCoord) {
+	 this.myCoord = myCoord;
+  }
+
+	public void setXTransform(Transformer trans){
+		xTransform = trans;
+	}
+	
+	public void setYTransform(Transformer trans){
+		yTransform = trans;
+	}
 
 
-	public ArrayList<String> calcAxisBreaksAndLimits(double minval, double maxval){
+	private ArrayList<String> calcAxisBreaksAndLimits(double minval, double maxval){
 		double diff = maxval - minval;
 		double base10 = Math.log10(diff);
 		double power = Math.floor(base10);
@@ -18,7 +38,7 @@ public abstract class Scale {
 		return calcAxisBreaksAndLimits(minval,maxval, step);
 	}
 
-	public ArrayList<String> calcAxisBreaksAndLimits(double minval, double maxval, int nlabs){
+	private ArrayList<String> calcAxisBreaksAndLimits(double minval, double maxval, int nlabs){
 		double diff = maxval - minval;
 		double tick_range = diff / (double)nlabs;
 		// make the tick range nice looking...
@@ -64,6 +84,16 @@ public abstract class Scale {
 		}
 		return toReturn;
 	}
+	
+	public interface Transformer{
+		public Column transform(Column c);
+	}
+
+	@Override
+  public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
+	  // TODO Auto-generated method stub
+	  
+  }
 
 
 }
