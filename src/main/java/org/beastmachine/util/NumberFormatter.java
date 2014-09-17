@@ -9,8 +9,14 @@ public class NumberFormatter {
 	public static String format(double d) {
 		String naive = String.valueOf(d);
 		String postFix = "";
+		System.out.println(naive);
 		if(naive.contains("E")){
-			postFix = naive.subSequence(naive.indexOf("E"), naive.length()).toString();
+			//special case for #.0E#
+			if(naive.subSequence(naive.indexOf("."),naive.indexOf(".") + 2).toString().equals(".0")){
+				postFix = ".0";
+			}
+			//Otherwise just keep the E#
+			postFix += naive.subSequence(naive.indexOf("E"), naive.length()).toString();
 			naive = naive.subSequence(0, naive.indexOf("E")).toString();
 		}
 		
@@ -28,7 +34,6 @@ public class NumberFormatter {
 		int zeroCount = 0;
 		for (int ii=0; ii<naive.length(); ii++) {
 			char c = naive.charAt(ii);
-			System.out.println("car "+c);
 			if (c == '.' || c == '-') {
 				continue;
 			} else if (c=='0') {
@@ -58,7 +63,7 @@ public class NumberFormatter {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(format(-11));
+		System.out.println(format(-1000000000002.0));
 	}
 
 }
