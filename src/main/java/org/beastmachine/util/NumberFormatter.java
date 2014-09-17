@@ -5,6 +5,7 @@ import static java.lang.Math.max;
 public class NumberFormatter {
 	private static final int ZEROS_LIMIT=5;
 
+
 	public static String format(double d) {
 		String naive = String.valueOf(d);
 		String postFix = "";
@@ -57,6 +58,7 @@ public class NumberFormatter {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(format(-100.00001));
+		System.out.println(format(-11));
 	}
+
 }
