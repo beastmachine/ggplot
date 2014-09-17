@@ -42,6 +42,9 @@ public class NumberFormatter {
 						firstZero = ii;
 					}
 					zeroCount++;
+					if(ii == naive.length()-1){
+						naive = naive.substring(0,Math.min(firstZero, decimal));
+					}
 				}
 
 			} else {
@@ -63,7 +66,7 @@ public class NumberFormatter {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(format(-1000000000002.0));
+		System.out.println(format(-1.0));
 	}
 
 }
