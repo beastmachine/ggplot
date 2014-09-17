@@ -1,7 +1,7 @@
-package org.beastmachine.ggplot.core;
+package org.beastmachine.ggplot;
 
 import org.beastmachine.dataframe.Column;
 
-public abstract class GgStat {
+public abstract class Stat {
   public abstract Column apply(Column c);
 }

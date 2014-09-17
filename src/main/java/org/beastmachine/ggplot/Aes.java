@@ -1,18 +1,18 @@
-package org.beastmachine.ggplot.core;
+package org.beastmachine.ggplot;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
 
-public class GgAesthetics {
+public class Aes {
   private Map<Aesthetic, String> mapping;
 
-  public GgAesthetics() {
+  public Aes() {
     mapping = new TreeMap<Aesthetic, String>();
   }
 
-  public GgAesthetics a(Aesthetic key, String val) {
+  public Aes a(Aesthetic key, String val) {
     mapping.put(key, val);
     return this;
   }
