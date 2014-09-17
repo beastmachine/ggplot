@@ -1,17 +1,17 @@
 package org.beastmachine.ggplot.theme;
 
-public class ElementUnit {
+public class Unit {
   
-  private Unit unit;
+  private UnitType unit;
   private double[] x;
   private Object data;
   
-  public ElementUnit(Unit unit, double ... x) {
+  public Unit(UnitType unit, double ... x) {
     this.unit = unit;
     this.x = x;
   }
 
-  public ElementUnit(Unit unit, Object data, double ... x) {
+  public Unit(UnitType unit, Object data, double ... x) {
     this.unit = unit;
     this.x = x;
     this.data = data;
@@ -23,7 +23,7 @@ public class ElementUnit {
    * @author Peter
    *
    */
-  public enum Unit {
+  public enum UnitType {
     npc, cm, inches, mm, points, picas, bigpts, dida, cicero, scaledpts,
     lines, char_, native_, snpc, strwidth, strheight, grobwidth,
     grobheight;

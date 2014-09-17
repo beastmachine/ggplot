@@ -1,5 +1,5 @@
 package org.beastmachine.ggplot.theme;
 
-public enum ElementDirection {
+public enum Direction {
   horizontal, vertical;
 }

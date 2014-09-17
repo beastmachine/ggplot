@@ -2,25 +2,25 @@ package org.beastmachine.ggplot.theme;
 
 import com.google.common.base.Preconditions;
 
-public class ElementPosition {
+public class Position {
   
-  public static final ElementPosition left =
-      new ElementPosition(-2,0, false);
-  public static final ElementPosition right =
-      new ElementPosition(2,0, false);
-  public static final ElementPosition bottom =
-      new ElementPosition(0,-2, false);
-  public static final ElementPosition top =
-      new ElementPosition(0,2, false);
+  public static final Position left =
+      new Position(-2,0, false);
+  public static final Position right =
+      new Position(2,0, false);
+  public static final Position bottom =
+      new Position(0,-2, false);
+  public static final Position top =
+      new Position(0,2, false);
   
   private final double x;
   private final double y;
 
-  public ElementPosition(double x, double y) {
+  public Position(double x, double y) {
     this(x,y,true);
   }
   
-  private ElementPosition(double x, double y, boolean check) {
+  private Position(double x, double y, boolean check) {
     if (check) {
       Preconditions.checkArgument(x >=0 && x <= 1,
           "Custom position x must be in range [0, 1]");

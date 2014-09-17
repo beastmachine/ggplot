@@ -5,59 +5,59 @@ import java.util.Map;
 public class Theme {
   public Map<Key, Object> themeValues;
   
-  public ElementLine get(KeyLine key) {
-    return (ElementLine)themeValues.get(key);
+  public Line get(KeyLine key) {
+    return (Line)themeValues.get(key);
   }
   
-  public void put(KeyLine key, ElementLine elem) {
+  public void put(KeyLine key, Line elem) {
     themeValues.put(key, elem);
   }
   
-  public ElementRect get(KeyRect key) {
-    return (ElementRect)themeValues.get(key);
+  public Rect get(KeyRect key) {
+    return (Rect)themeValues.get(key);
   }
   
-  public void put(KeyRect key, ElementRect elem) {
+  public void put(KeyRect key, Rect elem) {
     themeValues.put(key, elem);
   }
   
-  public ElementText get(KeyText key) {
-    return (ElementText)themeValues.get(key);
+  public Text get(KeyText key) {
+    return (Text)themeValues.get(key);
   }
   
-  public void put(KeyText key, ElementText elem) {
+  public void put(KeyText key, Text elem) {
     themeValues.put(key, elem);
   }
   
-  public ElementUnit get(KeyUnit key) {
-    return (ElementUnit)themeValues.get(key);
+  public Unit get(KeyUnit key) {
+    return (Unit)themeValues.get(key);
   }
   
-  public void put(KeyUnit key, ElementUnit elem) {
+  public void put(KeyUnit key, Unit elem) {
     themeValues.put(key, elem);
   }
   
-  public ElementZeroOne get(KeyZeroOne key) {
-    return (ElementZeroOne)themeValues.get(key);
+  public ZeroOne get(KeyZeroOne key) {
+    return (ZeroOne)themeValues.get(key);
   }
   
-  public void put(KeyZeroOne key, ElementZeroOne elem) {
+  public void put(KeyZeroOne key, ZeroOne elem) {
     themeValues.put(key, elem);
   }
   
-  public ElementDirection get(KeyDirection key) {
-    return (ElementDirection)themeValues.get(key);
+  public Direction get(KeyDirection key) {
+    return (Direction)themeValues.get(key);
   }
   
-  public void put(KeyDirection key, ElementDirection elem) {
+  public void put(KeyDirection key, Direction elem) {
     themeValues.put(key, elem);
   }
   
-  public ElementPosition get(KeyPosition key) {
-    return (ElementPosition)themeValues.get(key);
+  public Position get(KeyPosition key) {
+    return (Position)themeValues.get(key);
   }
   
-  public void put(KeyPosition key, ElementPosition elem) {
+  public void put(KeyPosition key, Position elem) {
     themeValues.put(key, elem);
   }
   

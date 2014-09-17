@@ -8,14 +8,15 @@ import org.beastmachine.ggplot.visual.Colors;
 
 import static org.beastmachine.ggplot.visual.GeomConstants.POINTS_PER_075_MM;;
 
-public class ElementLine {
+public class Line {
 
   private final Color color;
   private final double size;
   private final LineType lineType;
   private final LineEnd lineEnd;
 
-  public ElementLine(Color color, double size, LineType lineType, LineEnd lineEnd) {
+  public Line(Color color, double size,
+      LineType lineType, LineEnd lineEnd) {
     this.color = color;
     this.size = size;
     this.lineType = lineType;
@@ -23,9 +24,10 @@ public class ElementLine {
   }
 
   public Stroke getStroke(double pixelsPerPoint) {
-    return new BasicStroke((float)(size*POINTS_PER_075_MM*pixelsPerPoint),
+    return new BasicStroke(
+        (float)(size*POINTS_PER_075_MM*pixelsPerPoint),
         lineEnd.strokeKey, lineEnd.strokeKey,
-        1f, lineType.dash, 0f);
+        10f, lineType.dash, 0f);
   }
 
   public Color getColor() {
@@ -36,6 +38,12 @@ public class ElementLine {
     }
   }
 
+  /**
+   * http://stat.ethz.ch/R-manual/R-patched/library/graphics/html/par.html
+   * See "Line Type Specification"
+   * @author Peter
+   *
+   */
   public static class LineType {
     public static final LineType blank = new LineType("11");
     public static final LineType solid = new LineType("10");
@@ -47,12 +55,16 @@ public class ElementLine {
 
     private float[] dash;
 
-    private LineType(String spec) {
+    public LineType(String spec) {
       dash = new float[spec.length()];
       for (int ii=0; ii<spec.length(); ii++) {
         int val = Integer.parseInt(spec.charAt(ii)+"",16);
         dash[ii] = val;
       }
+    }
+    
+    public float[] getDash() {
+      return dash;
     }
   }
 
