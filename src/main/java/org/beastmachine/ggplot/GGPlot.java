@@ -18,7 +18,8 @@ public class GGPlot implements Paintable{
 	public GGPlot() {
 		myDefaults = Defaults.getPrettyDefaults();
 		myLayers = new ArrayList<Layer>();
-		myFacet = new FacetNone(myDefaults);
+		myCoord = new CoordCartesian();
+		myFacet = new FacetNone(myDefaults, myScale, myCoord, myLayers);
 	}
 
 	public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
