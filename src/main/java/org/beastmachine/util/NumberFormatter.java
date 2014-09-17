@@ -40,8 +40,4 @@ public class NumberFormatter {
     }
     return naive;
   }
-  
-  public static void main(String[] args) {
-    System.out.println(format(200000001));
-  }
 }
