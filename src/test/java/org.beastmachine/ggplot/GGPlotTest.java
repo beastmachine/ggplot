@@ -1,4 +1,4 @@
-package test.beastmachine.ggplot;
+package org.beastmachine.ggplot;
 
 import java.util.ArrayList;
 
