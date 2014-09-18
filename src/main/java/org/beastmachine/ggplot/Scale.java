@@ -3,6 +3,7 @@ package org.beastmachine.ggplot;
 import java.awt.Graphics2D;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.beastmachine.dataframe.Column;
 import org.beastmachine.dataframe.DataFrame;
@@ -23,11 +24,13 @@ public class Scale implements Paintable {
 	private Aes aesthetic;
 	private DataFrame data;
 	private DataFrame plotData;
+	private List<Layer> layers;
 
-	public Scale(DataFrame data, Aes aesthetic, Coord myCoord) {
+	public Scale(DataFrame data, Aes aesthetic, Coord myCoord, List<Layer> layers) {
 	 this.myCoord = myCoord;
 	 this.aesthetic = aesthetic;
 	 this.data = data;
+	 this.layers = layers;
 	 xTransform = new IdentityTransform();
 	 yTransform = new IdentityTransform();
 	 createPlotData();
@@ -45,10 +48,13 @@ public class Scale implements Paintable {
 	  			plotData.c(aes.toString(), yTransform.transform(data.get(val)));
 	  		}
 	  		else{
-	  			Preconditions.checkState(false, "Aesthetic ",aes," not currently supported. TODO");
+	  			Preconditions.checkState(false, "Aesthetic ",aes," not currently supported. TODO"); //TODO
 	  			plotData.c(aes.toString(), data.get(val));
 	  		}
 	  	}
+	  }
+	  for(Layer l: layers){
+	  	
 	  }
   }
 

@@ -15,14 +15,16 @@ public class GGPlot implements Paintable{
 	private Facet myFacet;
 	private List<Layer> myLayers;
 	private Defaults myDefaults;
+	private Aes myAes;
 	
 
 
 	public GGPlot() {
+		myAes = new Aes();
 		myDefaults = Defaults.getPrettyDefaults();
 		myLayers = new ArrayList<Layer>();
 		myCoord = new CoordCartesian();
-		myScale = new Scale(myCoord);
+		myScale = new Scale(null, myAes, myCoord, myLayers);
 		myFacet = new FacetNone(myDefaults, myScale, myCoord, myLayers);
 	}
 	
