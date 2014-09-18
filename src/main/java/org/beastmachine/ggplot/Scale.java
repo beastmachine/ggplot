@@ -53,9 +53,25 @@ public class Scale implements Paintable {
 	  		}
 	  	}
 	  }
-	  for(Layer l: layers){
-	  	
+
+	  for (Layer l: layers) {
+      // TODO  apply global scale transform
+      // TODO apply this layer's stat transform
+      l.createPlotData();
 	  }
+
+    double xmin = Double.MAX_VALUE;
+    double xmax = Double.MIN_VALUE;
+
+    double ymin = Double.MAX_VALUE;
+    double ymax = Double.MIN_VALUE;
+
+    // TODO update min/max from global x/y aesthetics
+
+    for (Layer l: layers) {
+      // TODO update min/max from this layer's x/y aesthetics
+    }
+
   }
 
 	public void setXTransform(Transformer trans){
