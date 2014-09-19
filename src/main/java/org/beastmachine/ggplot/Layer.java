@@ -5,12 +5,13 @@ import java.awt.Graphics2D;
 
 import com.google.common.base.Preconditions;
 import org.beastmachine.dataframe.DataFrame;
+import org.beastmachine.ggplot.Statistic;
 
 public class Layer {
   private DataFrame myData;
   private DataFrame plotData;
   private Aes myAes;
-  private Stat myStat;
+  private Statistic myStat;
   private Geom myGeom;
   
   public Layer(DataFrame data, Aes aes, Layer.Geom geom){
@@ -38,12 +39,12 @@ public class Layer {
   	geom_segment, geom_smooth, geom_step, geom_text, geom_tile, geom_violin, geom_vline
   }
 
-//  public enum Stat {
-//    stat_bin, stat_bin2d, stat_bindot, stat_binhex, stat_boxplot, stat_contour,
-//    stat_density_2d, stat_density, stat_ecdf, stat_ellipse, stat_function,
-//    stat_identity, stat_qq, stat_quantile, stat_smooth_methods, stat_smooth,
-//    stat_spoke, stat_sum, stat_summary_2d, stat_summary_hex, stat_summary,
-//    stat_unique, stat_vline, stat_ydensity
-//  }
+  public enum Stat {
+    stat_bin, stat_bin2d, stat_bindot, stat_binhex, stat_boxplot, stat_contour,
+    stat_density_2d, stat_density, stat_ecdf, stat_ellipse, stat_function,
+    stat_identity, stat_qq, stat_quantile, stat_smooth_methods, stat_smooth,
+    stat_spoke, stat_sum, stat_summary_2d, stat_summary_hex, stat_summary,
+    stat_unique, stat_vline, stat_ydensity
+  }
   
 }

@@ -129,6 +129,24 @@ public abstract class Column {
 	public int size(){
 		return nRows();
 	}
+	
+	public double min(){
+		checkState(isNumeric, "Currently min only works on numeric columns, this may change TODO");
+		double min = Double.MAX_VALUE;
+		for(int ii = 0; ii < length(); ii++){
+			min = Math.min(min, getValue(ii));
+		}
+		return min;
+	}
+	
+	public double max(){
+		checkState(isNumeric, "Currently max only works on numeric columns, this may change TODO");
+		double max = Double.NEGATIVE_INFINITY;
+		for(int ii = 0; ii < length(); ii++){
+			max = Math.max(max, getValue(ii));
+		}
+		return max;
+	}
 
 	/**
 	 * Gets the label of the index'th value of a factor column.
@@ -492,20 +510,6 @@ public abstract class Column {
 	    return data.length;
     }
 
-    public Integer min() {
-      if (data.length == 0) return null;
-      int min = Integer.MAX_VALUE;
-      for (int n: data) min = Math.min(min, n);
-      return min;
-    }
-
-    public Integer max() {
-      if (data.length == 0) return null;
-      int max = Integer.MIN_VALUE;
-      for (int n: data) max = Math.max(max, n);
-      return max;
-    }
-
 	}
 	
 	private static class ColumnOInt extends Column{
@@ -543,20 +547,6 @@ public abstract class Column {
     public int nRows() {
 	    return data.length;
     }
-
-    public Integer min() {
-      if (data.length == 0) return null;
-      int min = Integer.MAX_VALUE;
-      for (int n: data) min = Math.min(min, n);
-      return min;
-    }
-
-    public Integer max() {
-      if (data.length == 0) return null;
-      int max = Integer.MIN_VALUE;
-      for (int n: data) max = Math.max(max, n);
-      return max;
-    }
 		
 	}
 	
@@ -593,20 +583,6 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
-    }
-
-    public Short min() {
-      if (data.length == 0) return null;
-      short min = Short.MAX_VALUE;
-      for (short n: data) min = (short)Math.min(min, n);
-      return min;
-    }
-
-    public Short max() {
-      if (data.length == 0) return null;
-      short max = Short.MIN_VALUE;
-      for (short n: data) max = (short)Math.max(max, n);
-      return max;
     }
 		
 	}
@@ -646,20 +622,6 @@ public abstract class Column {
     public int nRows() {
 	    return data.length;
     }
-
-    public Short min() {
-      if (data.length == 0) return null;
-      short min = Short.MAX_VALUE;
-      for (short n: data) min = (short)Math.min(min, n);
-      return min;
-    }
-
-    public Short max() {
-      if (data.length == 0) return null;
-      short max = Short.MIN_VALUE;
-      for (short n: data) max = (short)Math.max(max, n);
-      return max;
-    }
 		
 	}
 	
@@ -696,20 +658,6 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
-    }
-
-    public Long min() {
-      if (data.length == 0) return null;
-      long min = Long.MAX_VALUE;
-      for (long n: data) min = Math.min(min, n);
-      return min;
-    }
-
-    public Long max() {
-      if (data.length == 0) return null;
-      long max = Long.MIN_VALUE;
-      for (long n: data) max = Math.max(max, n);
-      return max;
     }
 
 	}
@@ -750,20 +698,6 @@ public abstract class Column {
 	    return data.length;
     }
 
-    public Long min() {
-      if (data.length == 0) return null;
-      long min = Long.MAX_VALUE;
-      for (long n: data) min = Math.min(min, n);
-      return min;
-    }
-
-    public Long max() {
-      if (data.length == 0) return null;
-      long max = Long.MIN_VALUE;
-      for (long n: data) max = Math.max(max, n);
-      return max;
-    }
-
 	}
 
 	private static class ColumnPFloat extends Column {
@@ -799,20 +733,6 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
-    }
-
-    public Float min() {
-      if (data.length == 0) return null;
-      float min = Float.MAX_VALUE;
-      for (float n: data) min = Math.min(min, n);
-      return min;
-    }
-
-    public Float max() {
-      if (data.length == 0) return null;
-      float max = Float.MIN_VALUE;
-      for (float n: data) max = Math.max(max, n);
-      return max;
     }
 
 	}
@@ -853,20 +773,6 @@ public abstract class Column {
 	    return data.length;
     }
 
-    public Float min() {
-      if (data.length == 0) return null;
-      float min = Float.MAX_VALUE;
-      for (float n: data) min = Math.min(min, n);
-      return min;
-    }
-
-    public Float max() {
-      if (data.length == 0) return null;
-      float max = Float.MIN_VALUE;
-      for (float n: data) max = Math.max(max, n);
-      return max;
-    }
-
 	}
 	
 	private static class ColumnPDouble extends Column {
@@ -904,20 +810,6 @@ public abstract class Column {
 	    return data.length;
     }
 
-    public Double min() {
-      if (data.length == 0) return null;
-      double min = Double.MAX_VALUE;
-      for (double n: data) min = Math.min(min, n);
-      return min;
-    }
-
-    public Double max() {
-      if (data.length == 0) return null;
-      double max = Double.MIN_VALUE;
-      for (double n: data) max = Math.max(max, n);
-      return max;
-    }
-
 	}
 	private static class ColumnODouble extends Column {
 
@@ -953,20 +845,6 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
-    }
-
-    public Double min() {
-      if (data.length == 0) return null;
-      double min = Double.MAX_VALUE;
-      for (double n: data) min = Math.min(min, n);
-      return min;
-    }
-
-    public Double max() {
-      if (data.length == 0) return null;
-      double max = Double.MIN_VALUE;
-      for (double n: data) max = Math.max(max, n);
-      return max;
     }
 
 	}
@@ -1018,20 +896,6 @@ public abstract class Column {
 	    return data.length;
     }
 
-    public String min() {
-      if (data.length == 0) return null;
-      String min = data[0];
-      for (String s: data) min = (min.compareTo(s) < 0) ? min : s;
-      return min;
-    }
-
-    public String max() {
-      if (data.length == 0) return null;
-      String max = data[0];
-      for (String s: data) max = (max.compareTo(s) > 0) ? max : s;
-      return max;
-    }
-
 	}
 	
 	private static class ColumnPBoolean extends Column {
@@ -1070,8 +934,6 @@ public abstract class Column {
     public int nRows() {
 	    return data.length;
     }
-
-    // TODO min, max
 
 	}
 	
@@ -1114,8 +976,6 @@ public abstract class Column {
 	    return data.length;
     }
 
-    // TODO min, max
-
   }
 	
 	private static class ColumnPByte extends Column {
@@ -1153,8 +1013,6 @@ public abstract class Column {
 	    return data.length;
     }
 
-    // TODO min, max
-
   }
 	private static class ColumnOByte extends Column {
 
@@ -1191,8 +1049,6 @@ public abstract class Column {
     public int nRows() {
 	    return data.length;
     }
-
-    // TODO min, max
 
   }
 	private static class ColumnLString extends Column {
@@ -1244,8 +1100,6 @@ public abstract class Column {
 	    return data.size();
     }
 
-    // TODO min, max
-
   }
 	
 	private static class ColumnLInt extends Column {
@@ -1283,8 +1137,6 @@ public abstract class Column {
 	    return data.size();
     }
 
-    // TODO min, max
-
   }
 	
 	private static class ColumnLByte extends Column {
@@ -1321,8 +1173,6 @@ public abstract class Column {
     public int nRows() {
 	    return data.size();
     }
-
-    // TODO min, max
 
   }
 
@@ -1362,8 +1212,6 @@ public abstract class Column {
 	    return data.size();
     }
 
-    // TODO min, max
-
   }
 	
 	private static class ColumnLDouble extends Column {
@@ -1401,8 +1249,6 @@ public abstract class Column {
 	    return data.size();
     }
 
-    // TODO min, max
-
   }
 	
 	private static class ColumnLLong extends Column {
@@ -1437,8 +1283,6 @@ public abstract class Column {
     public int nRows() {
 	    return data.size();
     }
-
-    // TODO min, max
 
   }
 

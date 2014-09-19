@@ -55,7 +55,7 @@ public class Scale implements Paintable {
 	  }
 
 	  for (Layer l: layers) {
-      // TODO  apply global scale transform
+      // TODO  apply global scale transform 
       // TODO apply this layer's stat transform
       l.createPlotData();
 	  }
