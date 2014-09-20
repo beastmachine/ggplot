@@ -6,6 +6,7 @@ import gnu.trove.list.array.TFloatArrayList;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.list.array.TLongArrayList;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +31,10 @@ public class DataFrame {
 	public DataFrame(){
 		nRows = 0;
 		columnsByName = new HashMap<String, Column>();
+	}
+	
+	public Collection<Column> columns(){
+		return columnsByName.values();
 	}
 	
 	/**
@@ -112,25 +117,25 @@ public class DataFrame {
 		return this;
 	}
 	
-	/**
-	 * Adds a column to the DataFrame and returns that modified DataFrame
-	 * for easy in-line column addition like new DataFrame().c("name",array1).c("name2",array2)
-	 * 
-	 * Takes a column name and one or more Integers or an array of Integers for
-	 * the column data and returns the same DataFrame modified
-	 * 
-	 * This column will be treated as a numeric because of its type
-	 * 
-	 * @param colName
-	 * @param colData
-	 * @return 
-	 */
-	public DataFrame c(String colName, Integer ... colData){
-		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
-		Column col = Column.getInstance(colName, colData, rowHolder);
-		columnsByName.put(colName, col);
-		return this;
-	}
+//	/**
+//	 * Adds a column to the DataFrame and returns that modified DataFrame
+//	 * for easy in-line column addition like new DataFrame().c("name",array1).c("name2",array2)
+//	 * 
+//	 * Takes a column name and one or more Integers or an array of Integers for
+//	 * the column data and returns the same DataFrame modified
+//	 * 
+//	 * This column will be treated as a numeric because of its type
+//	 * 
+//	 * @param colName
+//	 * @param colData
+//	 * @return 
+//	 */
+//	public DataFrame c(String colName, Integer ... colData){
+//		Holder<Integer> rowHolder = new Holder<Integer>(nRows);
+//		Column col = Column.getInstance(colName, colData, rowHolder);
+//		columnsByName.put(colName, col);
+//		return this;
+//	}
 	
 	/**
 	 * Adds a column to the DataFrame and returns that modified DataFrame
@@ -444,6 +449,10 @@ public class DataFrame {
 				"the names must be the same ", string," is not he same as ",column.getName());
 		columnsByName.put(string, column);
 		return this;
+  }
+
+	public void c(Column c) {
+	  columnsByName.put(c.getName(), c);
   }
 
 

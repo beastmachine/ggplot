@@ -1,11 +1,17 @@
 package org.beastmachine.ggplot;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Dimension2D;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 import org.beastmachine.dataframe.DataFrame;
+import org.beastmachine.ggplot.pdf.PaintPDF;
 import org.beastmachine.ggplot.visual.Paintable;
 
 public class GGPlot implements Paintable{
@@ -16,24 +22,65 @@ public class GGPlot implements Paintable{
 	private List<Layer> myLayers;
 	private Defaults myDefaults;
 	private Aes myAes;
+	private DataFrame myData;
 	
 
 
-	public GGPlot() {
-		myAes = new Aes();
+	public GGPlot(DataFrame df, Aes aes) {
+		myData = df;
+		myAes = aes;
 		myDefaults = Defaults.getPrettyDefaults();
 		myLayers = new ArrayList<Layer>();
 		myCoord = new CoordCartesian();
-		myScale = new Scale(null, myAes, myCoord, myLayers);
+		myScale = new Scale(df, myAes, myCoord, myLayers);
 		myFacet = new FacetNone(myDefaults, myScale, myCoord, myLayers);
 	}
 	
 	public static GGPlot ggplot(){
-		return new GGPlot();
+		return new GGPlot(new DataFrame(), new Aes());
+	}
+	
+	public static GGPlot ggplot(DataFrame df){
+		return new GGPlot(df, new Aes());
+	}
+	
+	public static GGPlot ggplot(DataFrame df, Aes aes){
+		return new GGPlot(df, aes);
+	}
+	
+	public static Aes aes(){
+		return new Aes();
+	}
+	
+	public GGPlot geom_point(){
+		addLayer(new Layer(myData, myAes, geom_point));
+		return this;
 	}
 	
 	
+	private void addLayer(Layer layer) {
+	  myLayers.add(layer);
+	  myScale.addLayer(layer);
+  }
 
+	public GGPlot plot(){
+		JFrame frame = new JFrame();
+		frame.setSize(new Dimension(800,600));
+		JPanel panel = new JPanel();
+		frame.setContentPane(panel);
+		//not sure what to do
+		return this;
+	}
+	
+	public GGPlot ggsave(String file){
+		try {
+	    PaintPDF.paintToPDF(this, new Dimension(621,480),
+	        new Dimension(792,612), file);
+    } catch (IOException e) {
+	    e.printStackTrace();
+    }
+		return this;
+	}
 	
 //	public GGPlot layer(Geom geom, Stat stat, )
 
@@ -46,6 +93,7 @@ public class GGPlot implements Paintable{
 		int leftMarginPixels = (int)Math.round(myDefaults.getLeftMarginPoints() * pixelsPerPointWidth);
 		int rightMarginPixels = (int)Math.round(myDefaults.getRightMarginPoints() * pixelsPerPointWidth);
 
+		System.out.println("margins "+bottomMarginPixels+" "+topMarginPixels+" "+leftMarginPixels+" "+rightMarginPixels);
 		myFacet.setArea(leftMarginPixels, (int)(pixels.getWidth() - rightMarginPixels), 
 				topMarginPixels, (int)(pixels.getHeight() - bottomMarginPixels));
 

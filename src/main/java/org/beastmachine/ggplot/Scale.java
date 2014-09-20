@@ -1,5 +1,8 @@
 package org.beastmachine.ggplot;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
@@ -7,6 +10,8 @@ import java.util.List;
 
 import org.beastmachine.dataframe.Column;
 import org.beastmachine.dataframe.DataFrame;
+import org.beastmachine.ggplot.visual.Colors;
+import org.beastmachine.ggplot.visual.Graphics2DState;
 import org.beastmachine.ggplot.visual.Paintable;
 import org.beastmachine.util.NumberFormatter;
 
@@ -15,8 +20,6 @@ import com.google.common.base.Preconditions;
 import gnu.trove.list.array.TDoubleArrayList;
 
 public class Scale implements Paintable {
-	
-
 
 	private Transformer xTransform;
 	private Transformer yTransform;
@@ -25,6 +28,13 @@ public class Scale implements Paintable {
 	private DataFrame data;
 	private DataFrame plotData;
 	private List<Layer> layers;
+	private int minX;
+	private int maxX;
+	private int minY;
+	private int maxY;
+	private ArrayList<String> xBreaks;
+	private ArrayList<String> yBreaks;
+	private double xRange;
 
 	public Scale(DataFrame data, Aes aesthetic, Coord myCoord, List<Layer> layers) {
 	 this.myCoord = myCoord;
@@ -33,7 +43,43 @@ public class Scale implements Paintable {
 	 this.layers = layers;
 	 xTransform = new IdentityTransform();
 	 yTransform = new IdentityTransform();
-	 createPlotData();
+	 
+  }
+	
+	@Override
+  public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
+
+		Graphics2DState state = new Graphics2DState(g);
+		Color xlabColor = Colors.grey87;
+		Color xTickColor = Colors.black;
+		BasicStroke xTickStroke = new BasicStroke(0.25f);
+		
+		
+		if(plotData == null){
+			createPlotData();
+		}
+		
+	  int ylabXSize = 5;
+	  int yTickXSize = 5;
+	  int xlabYSize = 5;
+	  int xTickYSize = 5;
+	  g.setColor(Colors.grey87);
+	  g.fillRect(minX+ylabXSize+yTickXSize , minY, maxX-minX-ylabXSize-yTickXSize, maxY-minY-xlabYSize-xTickYSize);
+		
+		int xlabY = maxY;
+		System.out.println("xlabY "+maxY);
+		g.setFont(new Font("Arial", Font.PLAIN, 6)); 
+	  for(String s: xBreaks){
+	  	int xlabX = minX + (int)Math.round(Double.parseDouble(s)/xRange*(maxX-minX));
+	  	System.out.println("attempting to draw string "+s+" at "+xlabX+", "+xlabY);
+	  	g.setColor(xlabColor);
+	  	g.drawString(s, xlabX, xlabY);
+	  	g.setColor(xTickColor);
+	  	g.setStroke(xTickStroke);
+	  	g.drawLine(xlabX, xlabY-10, xlabX, xlabY-12);
+	  }
+
+	  state.restore(g);
   }
 
 	private void createPlotData() {
@@ -54,24 +100,23 @@ public class Scale implements Paintable {
 	  	}
 	  }
 
-	  for (Layer l: layers) {
-      // TODO  apply global scale transform 
-      // TODO apply this layer's stat transform
-      l.createPlotData();
-	  }
-
     double xmin = Double.MAX_VALUE;
-    double xmax = Double.MIN_VALUE;
+    double xmax = Double.NEGATIVE_INFINITY;
 
     double ymin = Double.MAX_VALUE;
-    double ymax = Double.MIN_VALUE;
-
-    // TODO update min/max from global x/y aesthetics
-
-    for (Layer l: layers) {
-      // TODO update min/max from this layer's x/y aesthetics
-    }
-
+    double ymax = Double.NEGATIVE_INFINITY;
+	  Preconditions.checkState(layers.size()>0," must have at least one layer");
+	  for (Layer l: layers) {
+      l.createPlotData(plotData); // create layer plot data given default plot data which might be empty
+      xmin = Math.min(xmin, l.minX());
+      xmax = Math.max(xmax, l.maxX());
+      
+      ymin = Math.min(ymin, l.minY());
+      ymax = Math.max(ymax, l.maxY());
+	  }
+	  System.out.println("minmax "+xmin+" "+xmax+" "+ymin+" "+ymax);
+	  xBreaks = calcAxisBreaksAndLimits(xmin, xmax, 3);
+	  yBreaks = calcAxisBreaksAndLimits(ymin, ymax, 3);
   }
 
 	public void setXTransform(Transformer trans){
@@ -120,6 +165,7 @@ public class Scale implements Paintable {
 		 **/
 		ArrayList<String> toReturn = new ArrayList<String>();
 		TDoubleArrayList steps = drange(minval-(step/3), maxval+(step/3), step);
+		xRange = maxval+(step/3)-(minval-(step/3));
 		for(int ii = 0; ii < steps.size(); ii++){
 			toReturn.add(NumberFormatter.format(steps.get(ii)));
 		}
@@ -152,10 +198,17 @@ public class Scale implements Paintable {
 	  }
   }
 
-	@Override
-  public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
-	  
-	  
+
+
+	public void setArea(int minX, int maxX, int minY, int maxY) {
+		this.minX = minX;
+		this.maxX = maxX;
+		this.minY = minY;
+		this.maxY = maxY;
+  }
+
+	public void addLayer(Layer layer) {
+	  layers.add(layer);
   }
 
 

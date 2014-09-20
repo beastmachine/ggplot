@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 import com.google.common.base.Preconditions;
+
+import org.beastmachine.dataframe.Column;
 import org.beastmachine.dataframe.DataFrame;
 import org.beastmachine.ggplot.Statistic;
 
@@ -26,8 +28,13 @@ public class Layer {
     // myGeom.paint2D(g, pixels, points);
   }
 
-  protected void createPlotData() {
-    // TODO
+  public void createPlotData(DataFrame defaultData) {
+  	plotData = new DataFrame();
+  	for(Column c: defaultData.columns()){
+  		plotData.c(c);
+  	}
+  	//TODO do stuff that isn't just the defaultData
+  	
   }
 
   public enum Geom {
@@ -45,6 +52,22 @@ public class Layer {
     stat_identity, stat_qq, stat_quantile, stat_smooth_methods, stat_smooth,
     stat_spoke, stat_sum, stat_summary_2d, stat_summary_hex, stat_summary,
     stat_unique, stat_vline, stat_ydensity
+  }
+
+	public double minX() {
+	  return plotData.get(myAes.getVariable(Aes.Aesthetic.x)).min();
+  }
+
+	public double maxX() {
+	  return plotData.get(myAes.getVariable(Aes.Aesthetic.x)).max();
+  }
+
+	public double minY() {
+	  return plotData.get(myAes.getVariable(Aes.Aesthetic.y)).min();
+  }
+
+	public double maxY() {
+	  return plotData.get(myAes.getVariable(Aes.Aesthetic.y)).max();
   }
   
 }

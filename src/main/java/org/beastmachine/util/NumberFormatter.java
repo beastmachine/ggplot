@@ -9,7 +9,6 @@ public class NumberFormatter {
 	public static String format(double d) {
 		String naive = String.valueOf(d);
 		String postFix = "";
-		System.out.println(naive);
 		if(naive.contains("E")){
 			//special case for #.0E#
 			if(naive.subSequence(naive.indexOf("."),naive.indexOf(".") + 2).toString().equals(".0")){
@@ -48,7 +47,6 @@ public class NumberFormatter {
 				}
 
 			} else {
-				System.out.println(c);
 				previousNonzero = true;
 				zeroCount = 0;
 				firstZero = -1;
