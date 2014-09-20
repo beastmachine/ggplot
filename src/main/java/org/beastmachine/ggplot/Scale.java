@@ -35,6 +35,12 @@ public class Scale implements Paintable {
 	private ArrayList<String> xBreaks;
 	private ArrayList<String> yBreaks;
 	private double xRange;
+	private double minXData;
+	private double maxXData;
+	private double minYData;
+	private double maxYData;
+	private double minXDataOnPlot;
+	private double maxXDataOnPlot;
 
 	public Scale(DataFrame data, Aes aesthetic, Coord myCoord, List<Layer> layers) {
 	 this.myCoord = myCoord;
@@ -50,39 +56,87 @@ public class Scale implements Paintable {
   public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
 
 		Graphics2DState state = new Graphics2DState(g);
-		Color xlabColor = Colors.grey87;
-		Color xTickColor = Colors.black;
-		BasicStroke xTickStroke = new BasicStroke(0.25f);
+
+		
 		
 		
 		if(plotData == null){
-			createPlotData();
+			createPlotData(pixels, points);
 		}
+		System.out.println("pixel range to work in for scale "+minX+" "+maxX+" "+minY+" "+maxY);
+		int xGuideHeight = getXGuideHeight(g);
+		int yGuideWidth = getYGuideWidth(g);
 		
-	  int ylabXSize = 5;
-	  int yTickXSize = 5;
-	  int xlabYSize = 5;
-	  int xTickYSize = 5;
-	  g.setColor(Colors.grey87);
-	  g.fillRect(minX+ylabXSize+yTickXSize , minY, maxX-minX-ylabXSize-yTickXSize, maxY-minY-xlabYSize-xTickYSize);
-		
-		int xlabY = maxY;
-		System.out.println("xlabY "+maxY);
-		g.setFont(new Font("Arial", Font.PLAIN, 6)); 
-	  for(String s: xBreaks){
-	  	int xlabX = minX + (int)Math.round(Double.parseDouble(s)/xRange*(maxX-minX));
-	  	System.out.println("attempting to draw string "+s+" at "+xlabX+", "+xlabY);
-	  	g.setColor(xlabColor);
-	  	g.drawString(s, xlabX, xlabY);
-	  	g.setColor(xTickColor);
-	  	g.setStroke(xTickStroke);
-	  	g.drawLine(xlabX, xlabY-10, xlabX, xlabY-12);
-	  }
+	  double pixelsY = (maxY-minY-xGuideHeight);
+	  double pixelsX = (maxX-minX-yGuideWidth);
+	  double pixelsDiag = Math.sqrt(Math.pow(pixelsY,2)+Math.pow(pixelsX, 2));
+	  double pixelsDataDiag = pixelsDiag - 0.5*72.0;//TODO pull this from theme .75 inches diag to start of data and 72 dpi
+	  System.out.println("pixels diag "+pixelsDiag+" pixelsDataDiag "+pixelsDataDiag);
+	  double aspectRatio = pixelsX/pixelsY;
+	  
+	  double pixelsSubrangeX = Math.sqrt(Math.pow(pixelsDataDiag,2)/((Math.pow(aspectRatio, 2)+1)/Math.pow(aspectRatio, 2)));
+	  double pixelsSubrangeY = 1/aspectRatio*pixelsSubrangeX;
 
+	  minXDataOnPlot = minXData - (pixelsX-pixelsSubrangeX)/pixelsX *(maxXData-minXData)/2.0;
+	  maxXDataOnPlot = maxXData + (pixelsX-pixelsSubrangeX)/pixelsX *(maxXData-minXData)/2.0;
+	  System.out.println("pixels X "+pixelsX+" pixelsSubrangeX "+pixelsSubrangeX);
+	  System.out.println("minXDataOnPlot "+minXDataOnPlot);
+	  System.out.println("maxXDataOnPlot "+maxXDataOnPlot);
+				
+		drawXGuide(g, yGuideWidth);
+		System.out.println("xguideheight "+xGuideHeight);
+	  
+	  g.setColor(Colors.grey87);
+	  g.fillRect(minX+yGuideWidth , minY, maxX-minX-yGuideWidth, maxY-minY-xGuideHeight);
+		
+	  g.setColor(Color.red);
+	  System.out.println("red "+((int)((pixelsX-pixelsSubrangeX)/2.0))+" "+(int)((pixelsY-pixelsSubrangeY)/2.0));
+	  g.drawRect((int)((pixelsX-pixelsSubrangeX)/2.0)+minX+yGuideWidth, minY+(int)((pixelsY-pixelsSubrangeY)/2.0), (int)pixelsSubrangeX, (int)pixelsSubrangeY);
+		
 	  state.restore(g);
   }
 
-	private void createPlotData() {
+	private int getYGuideWidth(Graphics2D g) {
+		g.setFont(new Font("Arial", Font.PLAIN, 4)); //TODO pull this from somewhere
+		int yTickLength = 2; //TODO pull this from somewhere
+		double stringHeight = g.getFontMetrics().getStringBounds("exampletext", g).getHeight();
+	  return (int)Math.round(stringHeight + yTickLength);
+  }
+
+	private int getXGuideHeight(Graphics2D g) {
+		g.setFont(new Font("Arial", Font.PLAIN, 4)); //TODO pull this from somewhere
+		int xTickLength = 2; //TODO pull this from somewhere
+		double stringHeight = g.getFontMetrics().getStringBounds("exampletext", g).getHeight();
+		 return (int)Math.round(stringHeight + xTickLength);
+  }
+
+	private int drawXGuide(Graphics2D g, int yGuideWidth) {
+		Color xguideColor = Colors.grey42;// TODO pull this from somewhere
+		Color xTickColor = Colors.black; //TODO pull this from somewhere
+		BasicStroke xTickStroke = new BasicStroke(0.33f); //TODO pull this from somewhere
+		int xTickLength = 2; //TODO pull this from somewhere
+		System.out.println("xlabY "+maxY);
+		g.setFont(new Font("Arial", Font.PLAIN, 4)); //TODO pull this from somewhere
+		double stringHeight = g.getFontMetrics().getStringBounds("exampletext", g).getHeight();
+		int xlabY = (int) Math.round(maxY);
+	  for(String s: xBreaks){
+	  	double stringWidth = g.getFontMetrics().getStringBounds(s, g).getWidth();
+	  	System.out.println("string width of "+s+" "+stringWidth);
+	  	int xguideX = minX + yGuideWidth + (int)(Math.round(minXDataOnPlot+ (Double.parseDouble(s)-minXDataOnPlot)/
+	  			(maxXDataOnPlot-minXDataOnPlot)*(maxX-(minX+yGuideWidth)) - (stringWidth/2.0)));
+	  	System.out.println("attempting to draw string "+s+" at "+xguideX+", "+xlabY+" and this string is of width "+stringWidth+" with "+s.length()+" chars");
+	  	g.setColor(xguideColor);
+	  	g.drawString(s, xguideX, xlabY);
+	  	g.setColor(xTickColor);
+	  	g.setStroke(xTickStroke);
+	  	int xtickX = minX + yGuideWidth + (int)(Math.round(minXDataOnPlot + (Double.parseDouble(s)-minXDataOnPlot)/
+	  			(maxXDataOnPlot-minXDataOnPlot)*(maxX-(minX+yGuideWidth))));
+	  	g.drawLine(xtickX, (int)(xlabY-stringHeight), xtickX, (int)(xlabY-stringHeight-xTickLength));
+	  }
+	  return (int)(stringHeight+xTickLength);
+  }
+
+	private void createPlotData(Dimension2D pixels, Dimension2D points) {
 	  plotData = new DataFrame();
 	  for(Aes.Aesthetic aes: aesthetic.getSetAesthetics()){
 	  	String val = aesthetic.getVariable(aes);
@@ -114,19 +168,24 @@ public class Scale implements Paintable {
       ymin = Math.min(ymin, l.minY());
       ymax = Math.max(ymax, l.maxY());
 	  }
+
 	  System.out.println("minmax "+xmin+" "+xmax+" "+ymin+" "+ymax);
-	  xBreaks = calcAxisBreaksAndLimits(xmin, xmax, 3);
-	  yBreaks = calcAxisBreaksAndLimits(ymin, ymax, 3);
+	  xBreaks = calcAxisBreaksAndLimits(xmin, xmax);
+	  yBreaks = calcAxisBreaksAndLimits(ymin, ymax);
+	  minXData = xmin;
+	  maxXData = xmax;
+	  minYData = ymin;
+	  maxYData = ymax;
+	  
+
   }
 
 	public void setXTransform(Transformer trans){
 		xTransform = trans;
-		createPlotData();
 	}
 	
 	public void setYTransform(Transformer trans){
 		yTransform = trans;
-		createPlotData();
 	}
 
 
@@ -165,7 +224,8 @@ public class Scale implements Paintable {
 		 **/
 		ArrayList<String> toReturn = new ArrayList<String>();
 		TDoubleArrayList steps = drange(minval-(step/3), maxval+(step/3), step);
-		xRange = maxval+(step/3)-(minval-(step/3));
+//		xRange = maxval+(step/3)-(minval-(step/3));
+		System.out.println("xrange in data for plot "+xRange);
 		for(int ii = 0; ii < steps.size(); ii++){
 			toReturn.add(NumberFormatter.format(steps.get(ii)));
 		}

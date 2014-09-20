@@ -11,9 +11,16 @@ public class GGplotTest {
 
 	@Test
 	public void test() {
-		GGPlot plot = ggplot(dataframe().c("x", 1,2,3,4).c("y", 1,2,3,4), aes().a(x, "x").a(y, "y")).
-				geom_point().ggsave("/Users/wheaton/ggplot.pdf");
+		int[] v1 = {1,2,3,4};
+		int[] v2 = {1,2,3,4};
+		ggplot(dataframe().c("x",v1).c("y",v2),aes(x,"x",y,"y")).geom_point().ggsave("/Users/wheaton/ggplot.pdf");
+	//ggplot(dataframe().c("x",x).c("y",y),aes().x("x").y("y")).geom_point().ggsave("/Users/wheaton/ggplot.pdf") 
+ // ggsave(ggplot(data.frame(x=x,y=y),aes(x,y))+geom_point(),"/Users/wheaton/ggplot.pdf")     
+		Object sdlfkjsd = GGplotTest.bam.boo;
 	}
+	
+	
+	public enum bam{ boo, bootwo}
 
 }
 

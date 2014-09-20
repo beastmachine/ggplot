@@ -11,10 +11,10 @@ public class Defaults {
 
 	public static Defaults getPrettyDefaults() {
 		Defaults pretty = new Defaults();
-		pretty.bottomMarginInPoints = 1/72.0*0.15;
-		pretty.topMarginInPoints = 1/72.0*0.2;
-		pretty.leftMarginInPoints = 1/72.0*0.18;
-		pretty.rightMarginInPoints = 1/72.0*0.2;
+		pretty.bottomMarginInPoints = 72.0*0.15;
+		pretty.topMarginInPoints = 72.0*0.2;
+		pretty.leftMarginInPoints = 72.0*0.18;
+		pretty.rightMarginInPoints = 72.0*0.2;
 		return pretty;
 	}
 

@@ -74,8 +74,8 @@ public class GGPlot implements Paintable{
 	
 	public GGPlot ggsave(String file){
 		try {
-	    PaintPDF.paintToPDF(this, new Dimension(621,480),
-	        new Dimension(792,612), file);
+	    PaintPDF.paintToPDF(this, new Dimension(310,240),
+	        new Dimension(396,306), file);
     } catch (IOException e) {
 	    e.printStackTrace();
     }
@@ -85,9 +85,9 @@ public class GGPlot implements Paintable{
 //	public GGPlot layer(Geom geom, Stat stat, )
 
 	public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
-		double pixelsPerPointHeight = pixels.getHeight() / points.getHeight();
-		double pixelsPerPointWidth = pixels.getWidth() / points.getWidth();
-
+		double pixelsPerPointHeight = (double)pixels.getHeight() / (double)points.getHeight();
+		double pixelsPerPointWidth = (double)pixels.getWidth() / (double)points.getWidth();
+		
 		int bottomMarginPixels = (int)Math.round(myDefaults.getBottumMarginPoints() * pixelsPerPointHeight);
 		int topMarginPixels = (int)Math.round(myDefaults.getTopMarginPoints() * pixelsPerPointHeight);
 		int leftMarginPixels = (int)Math.round(myDefaults.getLeftMarginPoints() * pixelsPerPointWidth);
