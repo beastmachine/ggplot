@@ -15,17 +15,21 @@ public class Layer {
   private Aes myAes;
   private Statistic myStat;
   private Geom myGeom;
+  private Geometry myGeomImpl;
   
   public Layer(DataFrame data, Aes aes, Layer.Geom geom){
   	myStat = new StatIdentity();
   	myData = data;
   	myAes = aes;
   	myGeom = geom;
-  	
-  }
-  
-  public void paint2D(Graphics2D g, Dimension pixels, Dimension points) {
-    // myGeom.paint2D(g, pixels, points);
+  	switch(myGeom){
+  	case geom_point:
+  		myGeomImpl = new GeometryPoint();
+  		break;
+  	default:
+  		Preconditions.checkState(false, "geom not yet supported");
+  		break;
+  	}
   }
 
   public void createPlotData(DataFrame defaultData) {
@@ -43,7 +47,8 @@ public class Layer {
   	geom_errorbarh, geom_freqpoly, geom_hex, geom_histogram, geom_hline, geom_jitter,
   	geom_line, geom_linerange, geom_map, geom_path, geom_point, geom_pointrange, 
   	geom_polygon, geom_quantile, geom_raster, geom_rect, geom_ribbon, geom_rug,
-  	geom_segment, geom_smooth, geom_step, geom_text, geom_tile, geom_violin, geom_vline
+  	geom_segment, geom_smooth, geom_step, geom_text, geom_tile, geom_violin, geom_vline;
+
   }
 
   public enum Stat {
@@ -68,6 +73,13 @@ public class Layer {
 
 	public double maxY() {
 	  return plotData.get(myAes.getVariable(Aes.Aesthetic.y)).max();
+  }
+
+	public void draw(Scalable scale, Graphics2D g) {
+	  if(plotData == null){
+	  	createPlotData(myData);
+	  }
+	  myGeomImpl.draw(plotData,myAes, scale, g);
   }
   
 }

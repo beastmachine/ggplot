@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
 
 import gnu.trove.list.array.TDoubleArrayList;
 
-public class Scale implements Paintable {
+public class Scale implements Paintable, Scalable{
 
 	private Transformer xTransform;
 	private Transformer yTransform;
@@ -110,6 +110,9 @@ public class Scale implements Paintable {
 		drawYGuide(g);
 		System.out.println("xguideheight "+xGuideHeight);
 	  
+		for(Layer l: layers){
+			l.draw(this, g);
+		}
 
 		
 	  state.restore(g);
@@ -224,12 +227,12 @@ public class Scale implements Paintable {
 	  }
   }
 	
-	private int xDataPointToPixelLocation(double d){
+	public int xDataPointToPixelLocation(double d){
 		return minX + yGuideWidth + (int)(Math.round(minXDataOnPlot+ (d-minXDataOnPlot)/
   			(maxXDataOnPlot-minXDataOnPlot)*(maxX-(minX+yGuideWidth))));
 	}
 	
-	private int yDataPointToPixelLocation(double d){ //TODO not done
+	public int yDataPointToPixelLocation(double d){ //TODO not done
 		return maxY - xGuideHeight - (int)(Math.round(minYDataOnPlot+ (d-minYDataOnPlot)/
   			(maxYDataOnPlot-minYDataOnPlot)*(maxY-(minY+xGuideHeight))));
 	}

@@ -25,8 +25,8 @@ public class Aes {
   public String getVariable(Aesthetic aes) {
     Preconditions.checkNotNull(aes);
     String variable = mapping.get(aes);
-    Preconditions.checkNotNull(variable,
-        "GgAesthetics object does not have value for "+aes.name());
+//    Preconditions.checkNotNull(variable,
+//        "GgAesthetics object does not have value for "+aes.name()); TODO I think this shouldl be caught later on, null here just means that it isnt set
     return variable;
   }
 
