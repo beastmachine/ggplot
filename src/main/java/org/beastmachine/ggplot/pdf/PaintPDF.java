@@ -3,6 +3,7 @@ package org.beastmachine.ggplot.pdf;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -39,5 +40,14 @@ public class PaintPDF {
     g.startExport();
     paint.paint2D(g, pixelSize, pointSize);
     g.endExport();
+  }
+  
+  public static PDF2D getPdf(Dimension pixelSize, Dimension pointSize,
+      String pdfFileName) throws FileNotFoundException {
+    PDF2D g = new PDF2D(new File(pdfFileName), pixelSize);
+    g.setProperties(pageSize(pointSize));
+    g.setProperties(pageMargins(new Insets(0, 0, 0, 0)));
+    g.startExport();
+    return g;
   }
 }

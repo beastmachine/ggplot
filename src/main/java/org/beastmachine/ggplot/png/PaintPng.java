@@ -4,6 +4,7 @@ import static java.lang.Math.round;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,13 +21,16 @@ import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 
 import org.beastmachine.ggplot.visual.Paintable;
+import org.beastmachine.util.GDimension2D;
 
 public class PaintPng {
   public static void paintToPng(Paintable paint, Dimension pixelSize, double dpi, String outFilePath) throws IOException {
     BufferedImage img =
         new BufferedImage(pixelSize.width, pixelSize.height,
             BufferedImage.TYPE_INT_RGB);
-    Dimension pointsSize = new Dimension((int)round(72*pixelSize.width/dpi), (int)round(72*pixelSize.height/dpi));
+    Dimension2D pointsSize =
+        new GDimension2D(72*pixelSize.getWidth()/dpi,
+            72*pixelSize.getHeight()/dpi);
     paint.paint2D((Graphics2D)img.getGraphics(), pixelSize, pointsSize);
     savePng(img, dpi, new File(outFilePath));
   }
