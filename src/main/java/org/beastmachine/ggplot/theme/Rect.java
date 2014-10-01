@@ -6,6 +6,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 import java.util.Arrays;
 
 import org.beastmachine.ggplot.visual.Graphics2DState;
@@ -15,7 +16,7 @@ public class Rect {
   private Color color;
   private double size;
   private Line.LineType lineType;
-  
+
   public Rect(Color fill, Color color, double size,
       Line.LineType lineType) {
     this.fill = fill;
@@ -23,7 +24,7 @@ public class Rect {
     this.size = size;
     this.lineType = lineType;
   }
-  
+
   public double getSize() {
     return size;
   }
@@ -56,15 +57,15 @@ public class Rect {
     for (int ii=0; ii<dashCp.length; ii++) {
       dashCp[ii] = (float)(width*dashCp[ii]);
     }
-    
+
     return new BasicStroke(width, BasicStroke.CAP_ROUND,
         BasicStroke.CAP_ROUND, 10f, dashCp, 0f);
   }
-  
+
   public Color getFill() {
     return fill;
   }
-  
+
   public Color getColor() {
     return color;
   }
@@ -83,6 +84,16 @@ public class Rect {
             pointBounds.getY()*pixelsPerPoint,
             pointBounds.getWidth()*pixelsPerPoint,
             pointBounds.getHeight()*pixelsPerPoint);
+
+    g.setColor(getFill());
+    g.fill(
+        new RoundRectangle2D.Double(
+            pixelBounds.getX(),
+            pixelBounds.getY(),
+            pixelBounds.getWidth(),
+            pixelBounds.getHeight(),
+            lineWidth, lineWidth));
+
     if (getColor().getAlpha() > 0.0) {
       pixelBounds.setRect(
           pixelBounds.getX() + lineWidth/2,
@@ -91,14 +102,12 @@ public class Rect {
           pixelBounds.getHeight() - lineWidth);
     }
 
-//    System.out.println("Ready to paint:");
-//    System.out.println("x: "+pixelBounds.getX());
-//    System.out.println("y: "+pixelBounds.getY());
-//    System.out.println("w: "+pixelBounds.getWidth());
-//    System.out.println("h: "+pixelBounds.getHeight());
-    
-    g.setColor(getFill());
-    g.fill(pixelBounds);
+    //    System.out.println("Ready to paint:");
+    //    System.out.println("x: "+pixelBounds.getX());
+    //    System.out.println("y: "+pixelBounds.getY());
+    //    System.out.println("w: "+pixelBounds.getWidth());
+    //    System.out.println("h: "+pixelBounds.getHeight());
+
     g.setColor(getColor());
     g.setStroke(stroke);
     g.draw(pixelBounds);
