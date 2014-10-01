@@ -74,8 +74,8 @@ public class GGPlot implements Paintable{
 	
 	public GGPlot ggsave(String file){
 		try {
-	    PaintPDF.paintToPDF(this, new Dimension(310,240),
-	        new Dimension(396,306), file);
+	    PaintPDF.paintToPDF(this, new Dimension(640,480),
+	        new Dimension(792,612), file); //TODO pull these numbers from somewhere
     } catch (IOException e) {
 	    e.printStackTrace();
     }
