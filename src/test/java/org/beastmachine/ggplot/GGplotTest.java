@@ -25,7 +25,7 @@ public class GGplotTest {
 		int[] v2 = {4,3,2,1};
 		System.out.println("current corking directory "+new File("./").getAbsolutePath());
 		
-		GGPlot g = ggplot(dataframe().c("x",v1).c("y",v2),aes().x("x").y("y")).geom_point(data(dataframe().c("x",v2).c("y",v1)));
+		GGPlot g = ggplot(dataframe().c("x",v1).c("y",v2),aes().x("x").y("y")).geom_point(dataframe().c("x",v2).c("y",v1));
 		
 		ggsave(g, "./src/main/resources/ggplotdatachanger.pdf"); 
 	}

@@ -16,6 +16,10 @@ import org.beastmachine.ggplot.visual.Paintable;
 
 public class GGPlot implements Paintable{
 
+	public interface GGPlotOptionSetter extends GlobalOptionSetter{
+
+  }
+
 	private Scale myScale;
 	private Coord myCoord;
 	private Facet myFacet;
@@ -36,7 +40,7 @@ public class GGPlot implements Paintable{
 		myFacet = new FacetNone(myDefaults, myScale, myCoord, myLayers);
 	}
 	
-	public static GGPlot ggplot(){
+	public static GGPlot ggplot(GGPlotOptionSetter... options){
 		return new GGPlot(new DataFrame(), new Aes());
 	}
 	
