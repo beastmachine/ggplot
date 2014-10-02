@@ -242,8 +242,9 @@ public class Aes {
 
   public enum Aesthetic {
     adj, alpha, angle, bg, cex, col, color, colour, fg, fill, group,
-    hjust, label, linetype, lower, lty, lwd, max, middle, min, order,
-    pch, radius, sample, shape, size, srt, upper, vjust, weight, width,
-    x, xend, xmax, xmin, xintercept, y, yend, ymax, ymin, yintercept, z;
+    height, hjust, label, linetype, lower, lty, lwd, max, middle, min,
+    order, pch, radius, sample, shape, size, srt, upper, vjust, weight,
+    width, x, xend, xmax, xmin, xintercept, y, yend, ymax, ymin,
+    yintercept, z;
   }
 }
