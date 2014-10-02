@@ -33,5 +33,8 @@ public class GeometryPoint extends Geometry {
 			}
 		}
   }
+	
+	public interface OptionSetter extends GlobalOptionSetter {
+	}
 
 }

@@ -14,12 +14,17 @@ import javax.xml.ws.Holder;
 
 import com.google.common.base.Preconditions;
 
+import org.beastmachine.ggplot.GGPlot;
+import org.beastmachine.ggplot.GlobalOptionSetter;
+import org.beastmachine.ggplot.GeometryPoint;
+import org.beastmachine.ggplot.Layer;
+
 /**
  * 
  * @author wheaton5
  *
  */
-public class DataFrame {
+public class DataFrame implements GlobalOptionSetter, GeometryPoint.OptionSetter {
 
 	private int nRows;
 	private HashMap<String, Column> columnsByName;
@@ -455,8 +460,14 @@ public class DataFrame {
 	  columnsByName.put(c.getName(), c);
   }
 
+	@Override
+  public void setOptions(Layer layer) {
+	  layer.setDataFrame(this);
+  }
 
-
-
+	@Override
+  public void setOptions(GGPlot plot) {
+	  plot.setDataFrame(this);
+  }
 	
 }
