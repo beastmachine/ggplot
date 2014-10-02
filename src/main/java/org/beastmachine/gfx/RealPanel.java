@@ -33,7 +33,7 @@ public class RealPanel extends JPanel implements org.beastmachine.ggplot.visual.
     this.setBackground(white);
     /*
      * Based on my screen. There is no way to get real screen dimensions
-     *  other than asking the user.
+     *  other than asking the user. Phooey.
      */
     this.realScreenWidthInches = 11.28;
     this.realScreenHeightInches = 7.05;
