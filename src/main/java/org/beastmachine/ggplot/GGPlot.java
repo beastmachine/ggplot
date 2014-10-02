@@ -79,6 +79,11 @@ public class GGPlot implements Paintable{
     return this;
   }
 
+  public GGPlot themeGrey() {
+    this.theme = Theme.themeGrey();
+    return this;
+  }
+  
   public GGPlot theme(ThemeOptionSetter ... options) {
     for (ThemeOptionSetter opt : options) {
       opt.setOptions(this.theme);
