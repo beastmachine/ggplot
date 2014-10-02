@@ -1,5 +1,7 @@
 package org.beastmachine.ggplot;
 
+import static java.lang.Math.round;
+
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Dimension2D;
@@ -12,6 +14,8 @@ import javax.swing.JPanel;
 
 import org.beastmachine.dataframe.DataFrame;
 import org.beastmachine.ggplot.pdf.PaintPDF;
+import org.beastmachine.ggplot.theme.Theme;
+import org.beastmachine.ggplot.theme.Theme.KeyUnit;
 import org.beastmachine.ggplot.visual.Paintable;
 
 public class GGPlot implements Paintable{
@@ -20,7 +24,7 @@ public class GGPlot implements Paintable{
 	private Coord myCoord;
 	private Facet myFacet;
 	private List<Layer> myLayers;
-	private Defaults myDefaults;
+	private Theme myDefaults;
 	private Aes myAes;
 	private DataFrame myData;
 	
@@ -29,7 +33,7 @@ public class GGPlot implements Paintable{
 	public GGPlot(DataFrame df, Aes aes) {
 		myData = df;
 		myAes = aes;
-		myDefaults = Defaults.getPrettyDefaults();
+		myDefaults = Theme.THEME_GREY;
 		myLayers = new ArrayList<Layer>();
 		myCoord = new CoordCartesian();
 		myScale = new Scale(df, myAes, myCoord, myLayers);
@@ -84,14 +88,15 @@ public class GGPlot implements Paintable{
 //	public GGPlot layer(Geom geom, Stat stat, )
 
 	public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
-		double pixelsPerPointHeight = (double)pixels.getHeight() / (double)points.getHeight();
-		double pixelsPerPointWidth = (double)pixels.getWidth() / (double)points.getWidth();
+		double pixelsPerPoint = (double)pixels.getWidth() / (double)points.getWidth();
 		
-		int bottomMarginPixels = (int)Math.round(myDefaults.getBottumMarginPoints() * pixelsPerPointHeight);
-		int topMarginPixels = (int)Math.round(myDefaults.getTopMarginPoints() * pixelsPerPointHeight);
-		int leftMarginPixels = (int)Math.round(myDefaults.getLeftMarginPoints() * pixelsPerPointWidth);
-		int rightMarginPixels = (int)Math.round(myDefaults.getRightMarginPoints() * pixelsPerPointWidth);
-
+		double[] margin = myDefaults.get(KeyUnit.plot_margin).getPixelsArray(pixelsPerPoint);
+		
+		int topMarginPixels = (int)round(margin[0]);
+		int rightMarginPixels = (int)round(margin[1]);
+		int bottomMarginPixels = (int)round(margin[2]);
+		int leftMarginPixels = (int)round(margin[3]);
+		
 		myFacet.setArea(leftMarginPixels, (int)(pixels.getWidth() - rightMarginPixels), 
 				topMarginPixels, (int)(pixels.getHeight() - bottomMarginPixels));
 
