@@ -14,22 +14,13 @@ public class Layer {
   private DataFrame plotData;
   private Aes myAes;
   private Statistic myStat;
-  private Geom myGeom;
-  private Geometry myGeomImpl;
+  private Geometry myGeom;
   
-  public Layer(DataFrame data, Aes aes, Layer.Geom geom){
+  public Layer(DataFrame data, Aes aes, Geometry geom){
   	myStat = new StatIdentity();
   	myData = data;
   	myAes = aes;
   	myGeom = geom;
-  	switch(myGeom){
-  	case geom_point:
-  		myGeomImpl = new GeometryPoint();
-  		break;
-  	default:
-  		Preconditions.checkState(false, "geom not yet supported");
-  		break;
-  	}
   }
 
   public void createPlotData(DataFrame defaultData) {
@@ -79,7 +70,15 @@ public class Layer {
 	  if(plotData == null){
 	  	createPlotData(myData);
 	  }
-	  myGeomImpl.draw(plotData,myAes, scale, g);
+	  myGeom.draw(plotData,myAes, scale, g);
+  }
+
+	public void setDataFrame(DataFrame df) {
+	 	myData = df;
+  }
+
+	public void setAesthetic(Aes aes) {
+	  myAes = aes;
   }
   
 }

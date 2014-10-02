@@ -52,11 +52,14 @@ public class GGPlot implements Paintable{
 		return new Aes();
 	}
 	
-	public GGPlot geom_point(){
-		addLayer(new Layer(myData, myAes, geom_point));
+	public GGPlot geom_point(GeometryPoint.OptionSetter... options){
+		Layer layer = new Layer(myData, myAes, new GeometryPoint());
+		for(GeometryPoint.OptionSetter setter: options){
+			setter.setOptions(layer);
+		}
+		addLayer(layer);
 		return this;
 	}
-	
 	
 	private void addLayer(Layer layer) {
 	  myLayers.add(layer);
@@ -68,7 +71,7 @@ public class GGPlot implements Paintable{
 		frame.setSize(new Dimension(800,600));
 		JPanel panel = new JPanel();
 		frame.setContentPane(panel);
-		//not sure what to do
+		//TODO not sure what to do
 		return this;
 	}
 	
@@ -80,8 +83,6 @@ public class GGPlot implements Paintable{
 	    e.printStackTrace();
     }
 	}
-	
-//	public GGPlot layer(Geom geom, Stat stat, )
 
 	public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
 		double pixelsPerPointHeight = (double)pixels.getHeight() / (double)points.getHeight();
@@ -162,6 +163,16 @@ public class GGPlot implements Paintable{
 	public static final Layer.Stat stat_unique = Layer.Stat.stat_unique;
 	public static final Layer.Stat stat_vline = Layer.Stat.stat_vline;
 	public static final Layer.Stat stat_ydensity = Layer.Stat.stat_ydensity;
+
+
+
+	public void setDataFrame(DataFrame df) {
+	  myData = df;
+  }
+
+	public void setAesthetic(Aes aes) {
+	  myAes = aes;
+  }
 
 
 }

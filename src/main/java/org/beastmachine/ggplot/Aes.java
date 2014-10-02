@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
 
-public class Aes {
+public class Aes implements GlobalOptionSetter, GeometryPoint.OptionSetter{
   private Map<Aesthetic, String> mapping;
 
   public Aes() {
@@ -246,5 +246,15 @@ public class Aes {
     order, pch, radius, sample, shape, size, srt, upper, vjust, weight,
     width, x, xend, xmax, xmin, xintercept, y, yend, ymax, ymin,
     yintercept, z;
+  }
+
+	@Override
+  public void setOptions(Layer layer) {
+	  layer.setAesthetic(this);
+  }
+
+	@Override
+  public void setOptions(GGPlot plot) {
+	  plot.setAesthetic(this);
   }
 }
