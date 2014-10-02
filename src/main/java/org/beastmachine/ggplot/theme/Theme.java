@@ -6,7 +6,7 @@ import static org.beastmachine.ggplot.theme.Text.Face.*;
 import static org.beastmachine.ggplot.visual.Colors.*;
 
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.HashMap;
 
 public class Theme {
 
@@ -25,7 +25,7 @@ public class Theme {
   public Map<Key, Object> themeValues;
 
   public Theme() {
-    themeValues = new TreeMap<Theme.Key, Object>();
+    themeValues = new HashMap<Theme.Key, Object>();
   }
 
   public Line get(KeyLine key) {
@@ -95,7 +95,7 @@ public class Theme {
   private static class ImmutableTheme extends Theme {
 
     private ImmutableTheme(Theme src) {
-      this.themeValues = new TreeMap<Theme.Key, Object>();
+      this.themeValues = new HashMap<Theme.Key, Object>();
       this.themeValues.putAll(src.themeValues);
     }
 
