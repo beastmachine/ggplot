@@ -1,7 +1,5 @@
 package org.beastmachine.ggplot.geom.point;
 
-import static org.beastmachine.ggplot.visual.GeomConstants.POINTS_PER_075_MM;
-
 import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -80,14 +78,10 @@ public class QwikDraw implements Paintable {
     Shape shape = null;
     switch (this.shape) {
     case 0:
-      shape = new Rectangle2D.Double(0, 0,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint);
+      shape = new Square(0, 0, this.size, pixelsPerPoint);
       break;
     case 1:
-      shape = new Ellipse2D.Double(0, 0,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint);
+      shape = new Circle(0, 0, this.size,pixelsPerPoint);
       break;
     case 2:
       shape = new Triangle(0, 0, this.size, pixelsPerPoint);
@@ -96,9 +90,7 @@ public class QwikDraw implements Paintable {
       shape = new Cross(0, 0, this.size, pixelsPerPoint);
       break;
     case 4:
-      shape = new Ex(0, 0,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint);
+      shape = new Ex(0, 0,this.size,pixelsPerPoint);
       break;
     case 5:
       shape = new Diamond(0, 0, this.size, pixelsPerPoint);
@@ -107,9 +99,7 @@ public class QwikDraw implements Paintable {
       shape = new DownTriangle(0, 0, this.size, pixelsPerPoint);
       break;
     case 7:
-      shape = new ExBox(0, 0,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint);
+      shape = new ExBox(0, 0, this.size, pixelsPerPoint);
       break;
     case 8:
       shape = new Asterisk(0, 0, this.size, pixelsPerPoint);
@@ -118,9 +108,7 @@ public class QwikDraw implements Paintable {
       shape = new CrossDiamond(0, 0, this.size, pixelsPerPoint);
       break;
     case 10:
-      shape = new CrossCircle(0, 0,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint,
-          this.size*POINTS_PER_075_MM*pixelsPerPoint);
+      shape = new CrossCircle(0, 0,this.size, pixelsPerPoint);
       break;
     case 11:
       shape = new Hexagram(0, 0, this.size, pixelsPerPoint);
@@ -152,8 +140,6 @@ public class QwikDraw implements Paintable {
           ((Cross) shape).x = screenX;
           ((Cross) shape).y = screenY;
         } else if (shape instanceof Ex) {
-          screenX -= shape.getBounds().getWidth()/2;
-          screenY -= shape.getBounds().getHeight()/2;
           ((Ex) shape).x = screenX;
           ((Ex) shape).y = screenY;
         } else if (shape instanceof Diamond) {
@@ -200,7 +186,7 @@ public class QwikDraw implements Paintable {
     double[] x = {1,2,3,4,5,6,7,8,9,10};
     double[] y = {2,3,4,5,6,7,8,9,10,11};
 
-    QwikDraw qd = new QwikDraw(x, y, 11, 5);
+    QwikDraw qd = new QwikDraw(x, y, 1, 5);
     PaintPDF.paintToPDF(qd,
         new Dimension(621,480),
         new Dimension(792,612),

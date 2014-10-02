@@ -1,18 +1,16 @@
 package org.beastmachine.ggplot.geom.point;
 
-import java.awt.Rectangle;
-import java.awt.Shape;
+import static java.lang.Math.sqrt;
+
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 import org.beastmachine.ggplot.visual.GeomConstants;
 
-public class Asterisk implements Shape {
+public class Asterisk extends Circle {
 
-  private static final double LENGTH_CONSTANT = 0.705555555555;
-  private static final double DIAG = 0.70710678118655;
+  private static final double LENGTH_CONSTANT = sqrt(2)/2.0;
+  private static final double DIAG = sqrt(2)/2.0;
 
   public double x;
   public double y;
@@ -22,6 +20,7 @@ public class Asterisk implements Shape {
   private double radius;
 
   public Asterisk(double x, double y, double sizeIn075mm, double pixelsPerPoint) {
+    super(x, y, sizeIn075mm*2*LENGTH_CONSTANT, pixelsPerPoint);
     this.x = x;
     this.y = y;
     this.sizeIn075mm = sizeIn075mm;
@@ -33,53 +32,20 @@ public class Asterisk implements Shape {
     return sizeIn075mm*GeomConstants.POINTS_PER_075_MM*pixelsPerPoint*LENGTH_CONSTANT;
   }
 
-  public Rectangle getBounds() {
-    return getBounds2D().getBounds();
-  }
-
-  public Rectangle2D getBounds2D() {
-    return new Rectangle2D.Double(x-radius, y-radius, 2*radius, 2*radius);
-  }
-
-  public boolean contains(double x, double y) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean contains(Point2D p) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean intersects(double x, double y, double w, double h) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean intersects(Rectangle2D r) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean contains(double x, double y, double w, double h) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean contains(Rectangle2D r) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
   public PathIterator getPathIterator(AffineTransform at) {
-    return new PathIt();
+    return new PathIt(at);
   }
 
   public PathIterator getPathIterator(AffineTransform at, double flatness) {
-    return new PathIt();
+    return new PathIt(at);
   }
 
   private class PathIt extends PathIterators {
+
+    private PathIt(AffineTransform at) {
+      super(at);
+    }
+
     public int currentSegment(double[] coords) {
       switch(myState) {
       case 0: return m(x,        y-radius, coords);

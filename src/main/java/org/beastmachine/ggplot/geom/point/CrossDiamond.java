@@ -9,108 +9,128 @@ import java.awt.geom.Rectangle2D;
 
 import org.beastmachine.ggplot.visual.GeomConstants;
 
-public class CrossDiamond implements Shape {
+public class CrossDiamond extends Diamond {
 
   private static final double LENGTH_CONSTANT = 0.705555555555;
 
-  public double x;
-  public double y;
-  private double sizeIn075mm;
-  private double pixelsPerPoint;
-
-  private double radius;
-
   public CrossDiamond(double x, double y, double sizeIn075mm, double pixelsPerPoint) {
-    this.x = x;
-    this.y = y;
-    this.sizeIn075mm = sizeIn075mm;
-    this.pixelsPerPoint = pixelsPerPoint;
-    this.radius = radius();
-  }
-
-  private double radius() {
-    return sizeIn075mm*GeomConstants.POINTS_PER_075_MM*pixelsPerPoint*LENGTH_CONSTANT;
-  }
-
-  public Rectangle getBounds() {
-    return getBounds2D().getBounds();
-  }
-
-  public Rectangle2D getBounds2D() {
-    return new Rectangle2D.Double(x-radius, y-radius, 2*radius, 2*radius);
-  }
-
-  public boolean contains(double x, double y) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean contains(Point2D p) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean intersects(double x, double y, double w, double h) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean intersects(Rectangle2D r) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean contains(double x, double y, double w, double h) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public boolean contains(Rectangle2D r) {
-    // TODO Auto-generated method stub
-    return false;
+    super(x,y,sizeIn075mm, pixelsPerPoint);
   }
 
   public PathIterator getPathIterator(AffineTransform at) {
-    return new PathIt();
+    return new PathIt(at);
   }
 
   public PathIterator getPathIterator(AffineTransform at, double flatness) {
-    return new PathIt();
+    return new PathIt(at);
   }
 
+  private PathIterator getSuperPathIter(AffineTransform at) {
+    return super.getPathIterator(at);
+  }
+  
   private class PathIt extends PathIterators {
-    public int currentSegment(double[] coords) {
-      switch(myState) {
-      case 0: return m(x,        y-radius, coords);
-      case 1: return e(x,        y+radius, coords);
-      case 2: return m(x-radius, y,        coords);
-      case 3: return e(x+radius, y,        coords);
-      case 4: return e(x,        y+radius, coords);
-      case 5: return e(x-radius, y,        coords);
-      case 6: return e(x,        y-radius, coords);
-      case 7: return e(x+radius, y,        coords);
+
+    private PathIterator superIterator;
+
+    private PathIt(AffineTransform at) {
+      super(at);
+      superIterator = CrossDiamond.this.getSuperPathIter(at);
+    }
+
+    public int getWindingRule() {
+      return WIND_NON_ZERO;
+    }
+
+    public boolean isDone() {
+      return superIterator.isDone() && super.isDone();
+    }
+
+    public void next() {
+      if (superIterator.isDone()) {
+        super.next();
+      } else {
+        superIterator.next();
+      }
+    }
+
+    public int currentSegment(float[] coords) {
+      if (superIterator.isDone()) {
+        switch(myState) {
+        case 0: return m(x, y-radius, coords);
+        case 1: return e(x, y+radius, coords);
+        case 2: return m(x-radius, y, coords);
+        case 3: return e(x+radius, y, coords);
+        }
+      } else {
+        return superIterator.currentSegment(coords);
       }
       return 0;
     }
 
-    public int currentSegment(float[] coords) {
-      switch(myState) {
-      case 0: return m(x,        y-radius, coords);
-      case 1: return e(x,        y+radius, coords);
-      case 2: return m(x-radius, y,        coords);
-      case 3: return e(x+radius, y,        coords);
-      case 4: return e(x,        y+radius, coords);
-      case 5: return e(x-radius, y,        coords);
-      case 6: return e(x,        y-radius, coords);
-      case 7: return e(x+radius, y,        coords);
+    public int currentSegment(double[] coords) {
+      if (superIterator.isDone()) {
+        switch(myState) {
+        case 0: return m(x, y-radius, coords);
+        case 1: return e(x, y+radius, coords);
+        case 2: return m(x-radius, y, coords);
+        case 3: return e(x+radius, y, coords);
+        }
+      } else {
+        int retCode = superIterator.currentSegment(coords);
+        for (double d : coords) {
+          System.out.print(d+"\t");
+        }
+        System.out.println(retCode);
+        return retCode;
       }
       return 0;
     }
 
     @Override
     protected int getStepCount() {
-      return 8;
+      return 4;
     }
   }
+
+//  private class PathIt extends PathIterators {
+//
+//    private PathIt(AffineTransform at) {
+//      super(at);
+//    }
+//
+//    public int currentSegment(double[] coords) {
+//      switch(myState) {
+//      case 0: return m(x,        y-radius, coords);
+//      case 1: return e(x,        y+radius, coords);
+//      case 2: return m(x-radius, y,        coords);
+//      case 3: return e(x+radius, y,        coords);
+//      case 4: return e(x,        y+radius, coords);
+//      case 5: return e(x-radius, y,        coords);
+//      case 6: return e(x,        y-radius, coords);
+//      case 7: return e(x+radius, y,        coords);
+//      }
+//      return 0;
+//    }
+//
+//    public int currentSegment(float[] coords) {
+//      switch(myState) {
+//      case 0: return m(x,        y-radius, coords);
+//      case 1: return e(x,        y+radius, coords);
+//      case 2: return m(x-radius, y,        coords);
+//      case 3: return e(x+radius, y,        coords);
+//      case 4: return e(x,        y+radius, coords);
+//      case 5: return e(x-radius, y,        coords);
+//      case 6: return e(x,        y-radius, coords);
+//      case 7: return e(x+radius, y,        coords);
+//      }
+//      return 0;
+//    }
+//
+//    @Override
+//    protected int getStepCount() {
+//      return 8;
+//    }
+//  }
 
 }

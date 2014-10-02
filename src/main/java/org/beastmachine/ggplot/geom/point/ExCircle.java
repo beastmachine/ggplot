@@ -6,9 +6,9 @@ import java.awt.geom.PathIterator;
 
 import org.beastmachine.ggplot.visual.GeomConstants;
 
-public class CrossCircle extends Ellipse2D.Double {
+public class ExCircle extends Ellipse2D.Double {
 
-  public CrossCircle(double x, double y, double sizeIn075mm, double pixelsPerPoint) {
+  public ExCircle(double x, double y, double sizeIn075mm, double pixelsPerPoint) {
     super(x-0.5*sizeIn075mm*GeomConstants.POINTS_PER_075_MM*pixelsPerPoint,
         y-0.5*sizeIn075mm*GeomConstants.POINTS_PER_075_MM*pixelsPerPoint,
         sizeIn075mm*GeomConstants.POINTS_PER_075_MM*pixelsPerPoint,
@@ -35,7 +35,7 @@ public class CrossCircle extends Ellipse2D.Double {
 
     private PathIt(AffineTransform at) {
       super(at);
-      superIterator = CrossCircle.this.getSuperPathIter(at);
+      superIterator = ExCircle.this.getSuperPathIter(at);
     }
 
     public int getWindingRule() {
@@ -57,10 +57,10 @@ public class CrossCircle extends Ellipse2D.Double {
     public int currentSegment(float[] coords) {
       if (superIterator.isDone()) {
         switch(myState) {
-        case 0: return m(x+width/2, y, coords);
-        case 1: return e(x+width/2, y+height, coords);
-        case 2: return m(x, y+height/2, coords);
-        case 3: return e(x+width, y+height/2, coords);
+        case 0: return m(x,       y,        coords);
+        case 1: return e(x+width, y+height, coords);
+        case 2: return m(x+width, y,        coords);
+        case 3: return e(x,       y+height, coords);
         }
       } else {
         return superIterator.currentSegment(coords);
@@ -71,10 +71,10 @@ public class CrossCircle extends Ellipse2D.Double {
     public int currentSegment(double[] coords) {
       if (superIterator.isDone()) {
         switch(myState) {
-        case 0: return m(x+width/2, y, coords);
-        case 1: return e(x+width/2, y+height, coords);
-        case 2: return m(x, y+height/2, coords);
-        case 3: return e(x+width, y+height/2, coords);
+        case 0: return m(x,       y,        coords);
+        case 1: return e(x+width, y+height, coords);
+        case 2: return m(x+width, y,        coords);
+        case 3: return e(x,       y+height, coords);
         }
       } else {
         int retCode = superIterator.currentSegment(coords);

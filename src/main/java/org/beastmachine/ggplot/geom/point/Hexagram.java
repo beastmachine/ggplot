@@ -1,9 +1,5 @@
 package org.beastmachine.ggplot.geom.point;
 
-import static java.lang.Math.PI;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -18,11 +14,11 @@ public class Hexagram implements Shape {
   private static final double TOP_BOTTOM_CONSTANT = 0.776;
   private static final double DX_CONSTANT = 0.672624647;
   private static final double DY_CONSTANT = 0.582831609;
+  
+  private static final double SLOPE_CONST = 2.02019300818158;
 
   public double x;
   public double y;
-  private double sizeIn075mm;
-  private double pixelsPerPoint;
 
   private double bigDy;
   private double dx;
@@ -31,12 +27,12 @@ public class Hexagram implements Shape {
   public Hexagram(double x, double y, double sizeIn075mm, double pixelsPerPoint) {
     this.x = x;
     this.y = y;
-    this.sizeIn075mm = sizeIn075mm;
-    this.pixelsPerPoint = pixelsPerPoint;
 
-    bigDy = sizeIn075mm*GeomConstants.POINTS_PER_075_MM*pixelsPerPoint*TOP_BOTTOM_CONSTANT;
-    dx = sizeIn075mm*GeomConstants.POINTS_PER_075_MM*pixelsPerPoint*DX_CONSTANT;
-    dy = sizeIn075mm*GeomConstants.POINTS_PER_075_MM*pixelsPerPoint*DY_CONSTANT;
+    double unitSize = sizeIn075mm*GeomConstants.POINTS_PER_075_MM*pixelsPerPoint;
+
+    bigDy = TOP_BOTTOM_CONSTANT * unitSize;
+    dx = DX_CONSTANT * unitSize;
+    dy = DY_CONSTANT * unitSize;
   }
 
   public Rectangle getBounds() {
@@ -48,13 +44,23 @@ public class Hexagram implements Shape {
   }
 
   public boolean contains(double x, double y) {
-    // TODO Auto-generated method stub
-    return false;
+    return topContains(x, y) || botContains(x,y);
   }
 
   public boolean contains(Point2D p) {
-    // TODO Auto-generated method stub
-    return false;
+    return contains(p.getX(), p.getY());
+  }
+
+  private boolean topContains(double x, double y) {
+    return (y <= this.y+dy) &&
+        (y >= SLOPE_CONST*(x-(this.x+dx))+this.y+dy) &&
+        (y >= -SLOPE_CONST*(x-(this.x-dx))+this.y+dy);
+  }
+
+  private boolean botContains(double x, double y) {
+    return (y >= this.y-dy) &&
+        (y <= -SLOPE_CONST*(x-(this.x+dx))+this.y-dy) &&
+        (y <= SLOPE_CONST*(x-(this.x-dx))+this.y-dy);
   }
 
   public boolean intersects(double x, double y, double w, double h) {
@@ -78,14 +84,19 @@ public class Hexagram implements Shape {
   }
 
   public PathIterator getPathIterator(AffineTransform at) {
-    return new PathIt();
+    return new PathIt(at);
   }
 
   public PathIterator getPathIterator(AffineTransform at, double flatness) {
-    return new PathIt();
+    return new PathIt(at);
   }
 
   private class PathIt extends PathIterators {
+
+    private PathIt(AffineTransform at) {
+      super(at);
+    }
+
     public int currentSegment(double[] coords) {
       switch(myState) {
       case 0: return m(x,    y-bigDy, coords);
