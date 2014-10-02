@@ -15,6 +15,8 @@ public class Text {
   private double angle;
   private double lineheight;
   
+  public Text() { }
+  
   public Text(String family, Face face, Color color, double size,
       ZeroOne hjust, ZeroOne vjust, double angle,
       double lineheight) {
@@ -28,6 +30,43 @@ public class Text {
     this.lineheight = lineheight;
   }
   
+  public Text(Text other) {
+    this(other.family, other.face, other.color, other.size, other.hjust,
+        other.vjust, other.angle, other.lineheight);
+  }
+
+  public void setFamily(String family) {
+    this.family = family;
+  }
+
+  public void setFace(Face face) {
+    this.face = face;
+  }
+
+  public void setColor(Color color) {
+    this.color = color;
+  }
+
+  public void setSize(double size) {
+    this.size = size;
+  }
+
+  public void setHjust(ZeroOne hjust) {
+    this.hjust = hjust;
+  }
+
+  public void setVjust(ZeroOne vjust) {
+    this.vjust = vjust;
+  }
+
+  public void setAngle(double angle) {
+    this.angle = angle;
+  }
+
+  public void setLineheight(double lineheight) {
+    this.lineheight = lineheight;
+  }
+
   public Font getFont(double pixelsPerPoint) {
     return new Font(family, face.fontStyle,
         (int)round(size*pixelsPerPoint));

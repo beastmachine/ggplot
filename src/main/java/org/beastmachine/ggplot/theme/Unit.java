@@ -6,8 +6,14 @@ public class Unit {
 
   private double[] bigpts;
 
+  public Unit() { }
+  
   public Unit(UnitType unit, double ... x) {
     bigpts = getBigpts(unit, x);
+  }
+  
+  public Unit(Unit other) {
+    this(UnitType.bigpts, Arrays.copyOf(other.bigpts,other.bigpts.length));
   }
   
   private double[] getBigpts(UnitType unit, double[] x) {

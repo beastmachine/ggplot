@@ -17,12 +17,18 @@ public class Rect {
   private double size;
   private Line.LineType lineType;
 
+  public Rect() { }
+  
   public Rect(Color fill, Color color, double size,
       Line.LineType lineType) {
     this.fill = fill;
     this.color = color;
     this.size = size;
     this.lineType = lineType;
+  }
+  
+  public Rect(Rect other) {
+    this(other.fill, other.color, other.size, other.lineType);
   }
 
   public double getSize() {

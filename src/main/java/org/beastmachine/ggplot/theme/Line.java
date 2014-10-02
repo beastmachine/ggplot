@@ -10,11 +10,13 @@ import static org.beastmachine.ggplot.visual.GeomConstants.POINTS_PER_075_MM;;
 
 public class Line {
 
-  private final Color color;
-  private final double size;
-  private final LineType lineType;
-  private final LineEnd lineEnd;
+  private Color color;
+  private double size;
+  private LineType lineType;
+  private LineEnd lineEnd;
 
+  public Line() { }
+  
   public Line(Color color, double size,
       LineType lineType, LineEnd lineEnd) {
     this.color = color;
@@ -22,7 +24,27 @@ public class Line {
     this.lineType = lineType;
     this.lineEnd = lineEnd;
   }
+  
+  public Line(Line other) {
+    this(other.color, other.size, other.lineType, other.lineEnd);
+  }
 
+  public void setColor(Color color) {
+    this.color = color;
+  }
+  
+  public void setSize(double size) {
+    this.size = size;
+  }
+  
+  public void setLineType(LineType lineType) {
+    this.lineType = lineType;
+  }
+  
+  public void setLineEnd(LineEnd lineEnd) {
+    this.lineEnd = lineEnd;
+  }
+  
   public Stroke getStroke(double pixelsPerPoint) {
     return new BasicStroke(
         (float)(size*POINTS_PER_075_MM*pixelsPerPoint),
