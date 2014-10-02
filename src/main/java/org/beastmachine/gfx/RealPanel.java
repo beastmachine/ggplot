@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import org.beastmachine.ggplot.visual.Graphics2DState;
 import org.beastmachine.util.GDimension2D;
 
-public class RealPanel extends JPanel {
+public class RealPanel extends JPanel implements org.beastmachine.ggplot.visual.Paintable {
   private static final long serialVersionUID = 1L;
 
   private double realScreenWidthInches;
@@ -78,7 +78,7 @@ public class RealPanel extends JPanel {
   protected void paintComponent(Graphics g) {
     Graphics2D g2d = (Graphics2D) g;
     Graphics2DState state = new Graphics2DState(g2d);
-    
+
     setAntiAlias(g2d);
     if (myObjects.size() != myPreObjects.size()) {
       synchPaintables();
@@ -93,7 +93,12 @@ public class RealPanel extends JPanel {
   private void setAntiAlias(Graphics2D g) {
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
   }
-  
+
+  public void setDpi(double dpi) {
+    this.dpi = dpi;
+    synchPaintables();
+  }
+
   public void addRenderable(Renderable r) {
     myPreObjects.add(r);
   }
@@ -101,5 +106,23 @@ public class RealPanel extends JPanel {
   public void setScreenDimension(Dimension2D inches) {
     this.realScreenWidthInches = inches.getWidth();
     this.realScreenHeightInches = inches.getHeight();
+  }
+
+  @Override
+  public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
+    Graphics2DState state = new Graphics2DState(g);
+
+    g.setColor(white);
+    g.drawRect(0, 0, (int)pixels.getWidth(), (int)pixels.getHeight());
+    setAntiAlias(g);
+
+    List<Paintable> toPaint = new ArrayList<Paintable>();
+    for (Renderable r : myPreObjects) {
+      toPaint.add(r.getPaintable(pixels, points));
+    }
+    for (Paintable p : toPaint) {
+      p.paint(g);
+    }
+    state.restore(g);
   }
 }
