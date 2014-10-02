@@ -78,10 +78,6 @@ public class CrossCircle extends Ellipse2D.Double {
         }
       } else {
         int retCode = superIterator.currentSegment(coords);
-        for (double d : coords) {
-          System.out.print(d+"\t");
-        }
-        System.out.println(retCode);
         return retCode;
       }
       return 0;

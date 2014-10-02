@@ -102,12 +102,6 @@ public class Rect {
           pixelBounds.getHeight() - lineWidth);
     }
 
-    //    System.out.println("Ready to paint:");
-    //    System.out.println("x: "+pixelBounds.getX());
-    //    System.out.println("y: "+pixelBounds.getY());
-    //    System.out.println("w: "+pixelBounds.getWidth());
-    //    System.out.println("h: "+pixelBounds.getHeight());
-
     g.setColor(getColor());
     g.setStroke(stroke);
     g.draw(pixelBounds);

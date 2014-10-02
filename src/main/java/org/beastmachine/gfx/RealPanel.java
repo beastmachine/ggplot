@@ -76,6 +76,7 @@ public class RealPanel extends JPanel implements org.beastmachine.ggplot.visual.
   }
 
   protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
     Graphics2D g2d = (Graphics2D) g;
     Graphics2DState state = new Graphics2DState(g2d);
 

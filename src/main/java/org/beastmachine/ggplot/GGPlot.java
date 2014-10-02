@@ -92,7 +92,6 @@ public class GGPlot implements Paintable{
 		int leftMarginPixels = (int)Math.round(myDefaults.getLeftMarginPoints() * pixelsPerPointWidth);
 		int rightMarginPixels = (int)Math.round(myDefaults.getRightMarginPoints() * pixelsPerPointWidth);
 
-		System.out.println("margins "+bottomMarginPixels+" "+topMarginPixels+" "+leftMarginPixels+" "+rightMarginPixels);
 		myFacet.setArea(leftMarginPixels, (int)(pixels.getWidth() - rightMarginPixels), 
 				topMarginPixels, (int)(pixels.getHeight() - bottomMarginPixels));
 
