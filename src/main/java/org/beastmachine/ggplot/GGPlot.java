@@ -13,6 +13,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.beastmachine.dataframe.DataFrame;
+import org.beastmachine.ggplot.coord.Coord;
+import org.beastmachine.ggplot.coord.CoordCartesian;
+import org.beastmachine.ggplot.facet.Facet;
+import org.beastmachine.ggplot.facet.FacetNone;
+import org.beastmachine.ggplot.geom.point.GeometryPoint;
 import org.beastmachine.ggplot.pdf.PaintPDF;
 import org.beastmachine.ggplot.theme.Line;
 import org.beastmachine.ggplot.theme.Theme;
@@ -128,6 +133,11 @@ public class GGPlot implements Paintable{
    */
   public static DataFrame dataframe(){
     return new DataFrame();
+  }
+  
+  public interface Scalable {
+    public int xDataPointToPixelLocation(double d);
+    public int yDataPointToPixelLocation(double d);
   }
 
   public static final Layer.Geom geom_abline = Layer.Geom.geom_abline;

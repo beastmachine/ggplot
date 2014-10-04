@@ -16,8 +16,8 @@ import com.google.common.base.Preconditions;
 
 import org.beastmachine.ggplot.GGPlot;
 import org.beastmachine.ggplot.GlobalOptionSetter;
-import org.beastmachine.ggplot.GeometryPoint;
 import org.beastmachine.ggplot.Layer;
+import org.beastmachine.ggplot.geom.point.GeometryPoint;
 
 /**
  * 

@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.beastmachine.ggplot.geom.point.GeometryPoint;
+
 import com.google.common.base.Preconditions;
 
 public class Aes implements GlobalOptionSetter, GGPlot.GGPlotOptionSetter,

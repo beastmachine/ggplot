@@ -1,4 +1,4 @@
-package org.beastmachine.ggplot;
+package org.beastmachine.ggplot.facet;
 
 import org.beastmachine.ggplot.visual.Paintable;
 

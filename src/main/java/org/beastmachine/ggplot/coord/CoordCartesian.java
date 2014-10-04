@@ -1,4 +1,4 @@
-package org.beastmachine.ggplot;
+package org.beastmachine.ggplot.coord;
 
 import java.awt.geom.Point2D;
 

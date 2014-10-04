@@ -1,9 +1,12 @@
-package org.beastmachine.ggplot;
+package org.beastmachine.ggplot.facet;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Dimension2D;
 import java.util.List;
 
+import org.beastmachine.ggplot.Layer;
+import org.beastmachine.ggplot.Scale;
+import org.beastmachine.ggplot.coord.Coord;
 import org.beastmachine.ggplot.theme.Theme;
 
 public class FacetNone extends Facet {

@@ -1,4 +1,4 @@
-package org.beastmachine.ggplot;
+package org.beastmachine.ggplot.stat;
 
 import org.beastmachine.dataframe.Column;
 

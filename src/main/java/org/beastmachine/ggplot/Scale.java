@@ -8,9 +8,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.beastmachine.dataframe.Column;
 import org.beastmachine.dataframe.DataFrame;
+import org.beastmachine.ggplot.coord.Coord;
 import org.beastmachine.ggplot.visual.Colors;
 import org.beastmachine.ggplot.visual.Graphics2DState;
 import org.beastmachine.ggplot.visual.Paintable;
@@ -20,7 +20,10 @@ import com.google.common.base.Preconditions;
 
 import gnu.trove.list.array.TDoubleArrayList;
 
-public class Scale implements Paintable, Scalable{
+
+
+
+public class Scale implements Paintable, GGPlot.Scalable{
 
   private Transformer xTransform;
   private Transformer yTransform;
@@ -58,6 +61,7 @@ public class Scale implements Paintable, Scalable{
     yTransform = new IdentityTransform();
 
   }
+ 
 
   @Override
   public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {

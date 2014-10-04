@@ -7,7 +7,9 @@ import com.google.common.base.Preconditions;
 
 import org.beastmachine.dataframe.Column;
 import org.beastmachine.dataframe.DataFrame;
-import org.beastmachine.ggplot.Statistic;
+import org.beastmachine.ggplot.geom.Geometry;
+import org.beastmachine.ggplot.stat.StatIdentity;
+import org.beastmachine.ggplot.stat.Statistic;
 
 public class Layer {
   private DataFrame myData;
@@ -67,7 +69,7 @@ public class Layer {
     return plotData.get(myAes.getVariable(Aes.Aesthetic.y)).max();
   }
 
-  public void draw(Scalable scale, Graphics2D g) {
+  public void draw(GGPlot.Scalable scale, Graphics2D g) {
     if(plotData == null){
       createPlotData();
     }
