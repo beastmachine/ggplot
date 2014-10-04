@@ -42,28 +42,20 @@ public class GGPlot implements Paintable{
   private Aes myAes;
   private DataFrame myData;
 
-
-
-  public GGPlot(DataFrame df, Aes aes) {
-    myData = df;
-    myAes = aes;
+  public GGPlot() {
     theme = Theme.themeGrey();
-    myLayers = new ArrayList<Layer>();
     myCoord = new CoordCartesian();
-    myScale = new Scale(df, myAes, myCoord, myLayers);
+    myLayers = new ArrayList<Layer>();
+    myScale = new Scale(myCoord, myLayers);
     myFacet = new FacetNone(theme, myScale, myCoord, myLayers);
   }
 
   public static GGPlot ggplot(GGPlotOptionSetter... options){
-    return new GGPlot(new DataFrame(), new Aes());
-  }
-
-  public static GGPlot ggplot(DataFrame df){
-    return new GGPlot(df, new Aes());
-  }
-
-  public static GGPlot ggplot(DataFrame df, Aes aes){
-    return new GGPlot(df, aes);
+    GGPlot plot = new GGPlot();
+    for(GGPlotOptionSetter opt: options){
+      opt.setOptions(plot);
+    }
+    return plot;
   }
 
   public static Aes aes(){

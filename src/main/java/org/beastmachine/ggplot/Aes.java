@@ -6,7 +6,8 @@ import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
 
-public class Aes implements GlobalOptionSetter, GeometryPoint.OptionSetter{
+public class Aes implements GlobalOptionSetter, GGPlot.GGPlotOptionSetter,
+  GeometryPoint.OptionSetter{
   private Map<Aesthetic, String> mapping;
 
   public Aes() {
