@@ -17,8 +17,40 @@ import org.beastmachine.ggplot.coord.Coord;
 import org.beastmachine.ggplot.coord.CoordCartesian;
 import org.beastmachine.ggplot.facet.Facet;
 import org.beastmachine.ggplot.facet.FacetNone;
+import org.beastmachine.ggplot.geom.Geometry;
+import org.beastmachine.ggplot.geom.path.GeometryAbline;
+import org.beastmachine.ggplot.geom.path.GeometryArea;
+import org.beastmachine.ggplot.geom.path.GeometryBar;
+import org.beastmachine.ggplot.geom.path.GeometryBin2d;
+import org.beastmachine.ggplot.geom.path.GeometryBoxPlot;
+import org.beastmachine.ggplot.geom.path.GeometryContour;
+import org.beastmachine.ggplot.geom.path.GeometryCrossBar;
+import org.beastmachine.ggplot.geom.path.GeometryFreqPoly;
+import org.beastmachine.ggplot.geom.path.GeometryHex;
+import org.beastmachine.ggplot.geom.path.GeometryHline;
+import org.beastmachine.ggplot.geom.path.GeometryLine;
+import org.beastmachine.ggplot.geom.path.GeometryLineRange;
+import org.beastmachine.ggplot.geom.path.GeometryMap;
+import org.beastmachine.ggplot.geom.path.GeometryPath;
+import org.beastmachine.ggplot.geom.path.GeometryPolygon;
+import org.beastmachine.ggplot.geom.path.GeometryRaster;
+import org.beastmachine.ggplot.geom.path.GeometryRect;
+import org.beastmachine.ggplot.geom.path.GeometryRibbon;
+import org.beastmachine.ggplot.geom.path.GeometryRug;
+import org.beastmachine.ggplot.geom.path.GeometrySegment;
+import org.beastmachine.ggplot.geom.path.GeometrySmooth;
+import org.beastmachine.ggplot.geom.path.GeometryTile;
+import org.beastmachine.ggplot.geom.path.GeometryVLine;
+import org.beastmachine.ggplot.geom.path.GeometryViolin;
+import org.beastmachine.ggplot.geom.point.GeometryJitter;
 import org.beastmachine.ggplot.geom.point.GeometryPoint;
+import org.beastmachine.ggplot.geom.point.GeometryPointRange;
+import org.beastmachine.ggplot.geom.text.GeometryText;
 import org.beastmachine.ggplot.pdf.PaintPDF;
+import org.beastmachine.ggplot.stat.StatBin;
+import org.beastmachine.ggplot.stat.StatQuantile;
+import org.beastmachine.ggplot.stat.StatSmooth;
+import org.beastmachine.ggplot.stat.Statistic;
 import org.beastmachine.ggplot.theme.Line;
 import org.beastmachine.ggplot.theme.Theme;
 import org.beastmachine.ggplot.theme.ThemeDirectionOptionSetter;
@@ -33,6 +65,8 @@ import org.beastmachine.ggplot.theme.ThemeZeroOneOptionSetter;
 import org.beastmachine.ggplot.theme.Theme.KeyUnit;
 import org.beastmachine.ggplot.visual.Paintable;
 
+import com.google.common.base.Preconditions;
+
 public class GGPlot implements Paintable{
 
   public interface GGPlotOptionSetter extends GlobalOptionSetter{
@@ -46,10 +80,13 @@ public class GGPlot implements Paintable{
   private Theme theme;
   private Aes myAes;
   private DataFrame myData;
+  private Statistic myStat;
+  private Geometry myDefaultGeom;
 
   public GGPlot() {
     theme = Theme.themeGrey();
     myCoord = new CoordCartesian();
+    myDefaultGeom = new GeometryPoint();
     myLayers = new ArrayList<Layer>();
     myScale = new Scale(myCoord, myLayers);
     myFacet = new FacetNone(theme, myScale, myCoord, myLayers);
@@ -62,24 +99,243 @@ public class GGPlot implements Paintable{
     }
     return plot;
   }
-
-  public static Aes aes(){
-    return new Aes();
+  
+  /***************************************************
+   * GEOMs go here
+   */
+  
+  public GGPlot geom_abline(GeometryAbline.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryAbline());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
   }
-
-  public GGPlot geom_point(GeometryPoint.OptionSetter... options){
-    Layer layer = new Layer(myData, myAes, new GeometryPoint());
-    for(GeometryPoint.OptionSetter setter: options){
-      setter.setOptions(layer);
-    }
+  
+  public GGPlot geom_area(GeometryArea.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryArea());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_bar(GeometryBar.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryBar());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_bin2d(GeometryBin2d.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryBin2d());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_boxplot(GeometryBoxPlot.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryBoxPlot());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_contour(GeometryContour.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryContour());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_crossbar(GeometryCrossBar.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryCrossBar());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_freqpoly(GeometryFreqPoly.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryFreqPoly());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_hex(GeometryHex.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryHex());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_histogram(GeometryBar.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryBar(), new StatBin());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_hline(GeometryHline.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryHline());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_jitter(GeometryJitter.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryJitter());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_line(GeometryLine.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryLine());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_linerange(GeometryLineRange.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryLineRange());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_map(GeometryMap.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryMap());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_path(GeometryPath.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryPath());
+    setOptions(layer, options);
     addLayer(layer);
     return this;
   }
 
-  public GGPlot themeGrey() {
-    this.theme = Theme.themeGrey();
+  public GGPlot geom_point(GeometryPoint.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryPoint());
+    setOptions(layer, options);
+    addLayer(layer);
     return this;
   }
+  
+  public GGPlot geom_pointrange(GeometryPointRange.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryPointRange());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_polygon(GeometryPolygon.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryPolygon());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_quantile(GeometryLine.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryLine(), new StatQuantile());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_raster(GeometryRaster.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryRaster());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_rect(GeometryRect.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryRect());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_ribbon(GeometryRibbon.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryRibbon());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_rug(GeometryRug.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryRug());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_segment(GeometrySegment.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometrySegment());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_smooth(GeometrySmooth.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryLine(), new StatSmooth());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_step(GeometrySegment.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryLine(), new StatSmooth());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_text(GeometryText.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryText());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  /**
+   * I dont know the difference between this and raster but making a dif object for
+   * the time being.
+   * @param options
+   * @return
+   */
+  public GGPlot geom_tile(GeometryTile.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryTile());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_violin(GeometryViolin.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryViolin());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  public GGPlot geom_vline(GeometryVLine.OptionSetter... options){
+    Layer layer = new Layer(myData, myAes, new GeometryVLine());
+    setOptions(layer, options);
+    addLayer(layer);
+    return this;
+  }
+  
+  private void setOptions(Layer layer, GlobalOptionSetter... options){
+    for(GlobalOptionSetter setter: options){
+      setter.setOptions(layer);
+    }
+  }
+  
+  /**
+   * End GEOMS
+   ********************************************/
   
   public GGPlot theme(ThemeOptionSetter ... options) {
     for (ThemeOptionSetter opt : options) {
@@ -134,10 +390,19 @@ public class GGPlot implements Paintable{
   public static DataFrame dataframe(){
     return new DataFrame();
   }
+
+  public static Aes aes(){
+    return new Aes();
+  }
   
   public interface Scalable {
     public int xDataPointToPixelLocation(double d);
     public int yDataPointToPixelLocation(double d);
+  }
+
+  public GGPlot themeGrey() {
+    this.theme = Theme.themeGrey();
+    return this;
   }
 
   public static final Layer.Geom geom_abline = Layer.Geom.geom_abline;
@@ -205,6 +470,14 @@ public class GGPlot implements Paintable{
 
   public void setAesthetic(Aes aes) {
     myAes = aes;
+  }
+
+  public void setStat(Statistic stat) {
+    myStat = stat;
+  }
+
+  public void setDefaultGeom(Geometry geom) {
+    myDefaultGeom = geom;
   }
 
   /**
@@ -486,4 +759,5 @@ public class GGPlot implements Paintable{
     return new ThemeTextOptionSetter(
         Theme.KeyText.strip_text_y);
   }
+
 }

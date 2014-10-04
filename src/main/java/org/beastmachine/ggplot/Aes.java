@@ -9,7 +9,7 @@ import org.beastmachine.ggplot.geom.point.GeometryPoint;
 import com.google.common.base.Preconditions;
 
 public class Aes implements GlobalOptionSetter, GGPlot.GGPlotOptionSetter,
-  GeometryPoint.OptionSetter{
+  Layer.OptionSetter, GeometryPoint.OptionSetter{
   private Map<Aesthetic, String> mapping;
 
   public Aes() {

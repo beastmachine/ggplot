@@ -9,6 +9,7 @@ import org.beastmachine.ggplot.Aes;
 import org.beastmachine.ggplot.GGPlot;
 import org.beastmachine.ggplot.GlobalOptionSetter;
 import org.beastmachine.ggplot.Aes.Aesthetic;
+import org.beastmachine.ggplot.Layer;
 import org.beastmachine.ggplot.geom.Geometry;
 import org.beastmachine.ggplot.visual.Colors;
 
@@ -40,6 +41,8 @@ public class GeometryPoint extends Geometry {
 	
 	public interface OptionSetter extends GlobalOptionSetter {
 	}
+
+
 
 
 }

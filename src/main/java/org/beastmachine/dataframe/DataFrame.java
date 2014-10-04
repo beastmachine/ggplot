@@ -25,7 +25,7 @@ import org.beastmachine.ggplot.geom.point.GeometryPoint;
  *
  */
 public class DataFrame implements GlobalOptionSetter, GGPlot.GGPlotOptionSetter,
-  GeometryPoint.OptionSetter {
+  Layer.OptionSetter, GeometryPoint.OptionSetter {
 
   private int nRows;
   private HashMap<String, Column> columnsByName;

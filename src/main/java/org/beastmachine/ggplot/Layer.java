@@ -12,17 +12,25 @@ import org.beastmachine.ggplot.stat.StatIdentity;
 import org.beastmachine.ggplot.stat.Statistic;
 
 public class Layer {
+  public interface OptionSetter extends GlobalOptionSetter {
+
+  }
+
   private DataFrame myData;
   private DataFrame plotData;
   private Aes myAes;
   private Statistic myStat;
   private Geometry myGeom;
-
-  public Layer(DataFrame data, Aes aes, Geometry geom){
+  
+  public Layer(){
     myStat = new StatIdentity();
-    myData = data;
-    myAes = aes;
-    myGeom = geom;
+  }
+
+  public Layer(OptionSetter... options){
+    this();
+    for(OptionSetter opt: options){
+      opt.setOptions(this);
+    }
   }
 
   public void createPlotData() {
@@ -82,6 +90,14 @@ public class Layer {
 
   public void setAesthetic(Aes aes) {
     myAes = aes;
+  }
+
+  public void setStat(Statistic stat) {
+    myStat = stat;
+  }
+
+  public void setGeom(Geometry geom) {
+    myGeom = geom;
   }
 
 }
