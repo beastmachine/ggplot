@@ -168,7 +168,11 @@ public class Theme {
   }
 
   public Line get(KeyLine key) {
-    return (Line)themeValues.get(key);
+     Object line = themeValues.get(key);
+     if(line != null && line instanceof Line){
+       return (Line)line;
+     }
+     else return null;//TODO return some default line?
   }
 
   public void put(KeyLine key, Line elem) {
@@ -176,7 +180,11 @@ public class Theme {
   }
 
   public Rect get(KeyRect key) {
-    return (Rect)themeValues.get(key);
+    Object rect = themeValues.get(key);
+    if(rect != null && rect instanceof Rect){
+      return (Rect)rect;
+    }
+    else return null;//TODO return some default Rect?
   }
 
   public void put(KeyRect key, Rect elem) {
@@ -184,7 +192,11 @@ public class Theme {
   }
 
   public Text get(KeyText key) {
-    return (Text)themeValues.get(key);
+    Object text = themeValues.get(key);
+    if(text != null && text instanceof Text){
+      return (Text)text;
+    }
+    else return null;//TODO return some default Text?
   }
 
   public void put(KeyText key, Text elem) {
@@ -192,7 +204,11 @@ public class Theme {
   }
 
   public Unit get(KeyUnit key) {
-    return (Unit)themeValues.get(key);
+    Object unit = themeValues.get(key);
+    if(unit != null && unit instanceof Unit){
+      return (Unit)unit;
+    }
+    else return null;//TODO return some default Unit?
   }
 
   public void put(KeyUnit key, Unit elem) {
@@ -200,7 +216,11 @@ public class Theme {
   }
 
   public ZeroOne get(KeyZeroOne key) {
-    return (ZeroOne)themeValues.get(key);
+    Object zeroOne = themeValues.get(key);
+    if(zeroOne != null && zeroOne instanceof ZeroOne){
+      return (ZeroOne)zeroOne;
+    }
+    else return null;
   }
 
   public void put(KeyZeroOne key, ZeroOne elem) {
@@ -208,7 +228,11 @@ public class Theme {
   }
 
   public Direction get(KeyDirection key) {
-    return (Direction)themeValues.get(key);
+    Object dir = themeValues.get(key);
+    if(dir != null && dir instanceof Direction){
+      return (Direction)dir;
+    }
+    else return null;//return some default direction?
   }
 
   public void put(KeyDirection key, Direction elem) {
@@ -216,7 +240,11 @@ public class Theme {
   }
 
   public Position get(KeyPosition key) {
-    return (Position)themeValues.get(key);
+    Object pos = themeValues.get(key);
+    if(pos != null && pos instanceof Position){
+      return (Position)pos;
+    }
+    else return null;//return some default position??????? this may be harder, maybe just error
   }
 
   public void put(KeyPosition key, Position elem) {
@@ -224,7 +252,11 @@ public class Theme {
   }
 
   public Justification get(KeyJustification key) {
-    return (Justification)themeValues.get(key);
+    Object just = themeValues.get(key);
+    if(just != null && just instanceof Justification){
+      return (Justification)just;
+    }
+    else return null;//return some defualt justification?
   }
 
   public void put(KeyJustification key, Justification elem) {
