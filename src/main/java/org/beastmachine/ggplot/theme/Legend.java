@@ -19,13 +19,13 @@ import org.beastmachine.ggplot.theme.Unit.UnitType;
 import org.beastmachine.ggplot.visual.Graphics2DState;
 import org.beastmachine.util.GDimension2D;
 
-public class LegendBox {
+public class Legend {
   private Unit legendMargin;
   private Direction legendBox;
   private Justification legendBoxJust;
   private LegendFormat legendSpec;
 
-  public LegendBox(Unit legendMargin, Direction legendBox,
+  public Legend(Unit legendMargin, Direction legendBox,
       Justification legendBoxJust, LegendFormat legendSpec) {
     this.legendMargin = legendMargin;
     this.legendBox = legendBox;
@@ -33,11 +33,24 @@ public class LegendBox {
     this.legendSpec = legendSpec;
   }
   
-  public LegendBox() {
+  public Legend() {
     this.legendMargin = new Unit(UnitType.cm, 0.2);
     this.legendBox = Direction.vertical;
     this.legendBoxJust = Justification.left;
     this.legendSpec = new LegendFormat();
+  }
+  
+  public Legend(Theme theme){
+    this.legendMargin = theme.get(Theme.KeyUnit.legend_margin);
+    this.legendBox = theme.get(Theme.KeyDirection.legend_box);
+    
+    
+    //    this.legendBoxJust = theme.get(Theme.KeyJustification.legend_justification);
+    //TODO this justification and other justification doesnt make sense
+    this.legendBoxJust = Justification.left; //for now
+    
+    
+    this.legendSpec = LegendFormat.createLegendFormat(theme);
   }
   
   public Dimension2D getRequiredPointsSize(Graphics2D g,
@@ -164,10 +177,10 @@ public class LegendBox {
     }
   }
 
-  public enum Direction {
-    horizontal,vertical;
-  }
-
+//  public enum Direction {
+//    horizontal,vertical;
+//  }
+//
   public enum Justification {
     top, bottom, left, right;
   }
@@ -181,9 +194,9 @@ public class LegendBox {
     
     LegendFormat spec = new LegendFormat();
     spec.getBackground().setColor(black);
-    spec.setDirection(LegendFormat.Direction.horizontal);
-    LegendBox lb = new LegendBox(new Unit(UnitType.lines,1),
-        Direction.vertical, Justification.left, spec);
+    spec.setDirection(Direction.horizontal);
+    Legend lb = new Legend(new Unit(UnitType.lines,1),
+        Direction.vertical, Justification.bottom, spec);
     
     String title1 = "Legend";
     List<String> texts1 = new ArrayList<String>();
@@ -202,7 +215,7 @@ public class LegendBox {
     legends.add(new LegendData(title1, texts1));
     legends.add(new LegendData(title2, texts2));
     
-    PDF2D pdf = PaintPDF.getPdf(pixelSize, plotPointSize, "/Users/Peter/Documents/test.pdf");
+    PDF2D pdf = PaintPDF.getPdf(pixelSize, plotPointSize, "/Users/haynes/Documents/test.pdf");
     Dimension2D pointsSize = lb.getRequiredPointsSize(pdf, legends);
     lb.paint2D(pdf, legends, pointsSize, pixelsPerPoint);
     pdf.endExport();

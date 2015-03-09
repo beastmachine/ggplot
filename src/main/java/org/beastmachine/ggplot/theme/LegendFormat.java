@@ -58,6 +58,13 @@ public class LegendFormat {
     this.text = text;
     this.textAlign = textAlign;
   }
+  
+  public static LegendFormat createLegendFormat(Theme theme) {
+    return new LegendFormat(theme.get(Theme.KeyRect.legend_background), theme.get(Theme.KeyDirection.legend_direction),
+           theme.get(Theme.KeyText.legend_title), theme.get(Theme.KeyZeroOne.legend_title_align), 
+           theme.get(Theme.KeyRect.legend_key), theme.get(Theme.KeyUnit.legend_key_width),
+           theme.get(Theme.KeyUnit.legend_key_height), theme.get(Theme.KeyText.legend_text), theme.get(Theme.KeyZeroOne.legend_text_align));
+  }
 
   public LegendFormat() {
     this.background = new Rect(white, black, 0.5, LineType.solid);
@@ -71,10 +78,6 @@ public class LegendFormat {
     this.text = new TextFormat("Arial", Face.plain, black, 9.6, new ZeroOne(0),
         new ZeroOne(0), 0, 1);
     this.textAlign = new ZeroOne(0);
-  }
-
-  public enum Direction {
-    horizontal,vertical;
   }
 
   public Dimension2D getRequiredPointsSize(Graphics2D g, String title, List<String> texts) {
@@ -387,5 +390,7 @@ public class LegendFormat {
     
     pdf.endExport();
   }
+
+
 
 }
