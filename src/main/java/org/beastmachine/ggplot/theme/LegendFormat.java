@@ -23,7 +23,7 @@ import java.util.List;
 import org.beastmachine.ggplot.pdf.PDF2D;
 import org.beastmachine.ggplot.pdf.PaintPDF;
 import org.beastmachine.ggplot.theme.Line.LineType;
-import org.beastmachine.ggplot.theme.Text.Face;
+import org.beastmachine.ggplot.theme.TextFormat.Face;
 import org.beastmachine.ggplot.theme.Unit.UnitType;
 import org.beastmachine.ggplot.visual.GeomConstants;
 import org.beastmachine.ggplot.visual.Graphics2DState;
@@ -33,21 +33,21 @@ import org.beastmachine.util.GDimension2D;
  * Some interesting thoughts:
  * http://kohske.wordpress.com/2010/12/25/various-position-adjustments-of-legend-in-ggplot2/
  */
-public class Legend {
+public class LegendFormat {
 
   private Rect background;
   private Direction direction;
-  private Text title;
+  private TextFormat title;
   private ZeroOne titleAlign;
   private Rect key;
   private Unit keyWidth;
   private Unit keyHeight;
-  private Text text;
+  private TextFormat text;
   private ZeroOne textAlign;
 
-  public Legend(Rect background, Direction direction, Text title,
+  public LegendFormat(Rect background, Direction direction, TextFormat title,
       ZeroOne titleAlign, Rect key, Unit keyWidth, Unit keyHeight,
-      Text text, ZeroOne textAlign) {
+      TextFormat text, ZeroOne textAlign) {
     this.background = background;
     this.direction = direction;
     this.title = title;
@@ -59,16 +59,16 @@ public class Legend {
     this.textAlign = textAlign;
   }
 
-  public Legend() {
+  public LegendFormat() {
     this.background = new Rect(white, black, 0.5, LineType.solid);
     this.direction = Direction.vertical;
-    this.title = new Text("Arial", Face.bold, black, 9.6, new ZeroOne(0),
+    this.title = new TextFormat("Arial", Face.bold, black, 9.6, new ZeroOne(0),
         new ZeroOne(0), 0, 1);
     this.titleAlign = new ZeroOne(0);
     this.key = new Rect(grey95,white,0.5,LineType.solid);
     this.keyWidth = new Unit(UnitType.lines, 1.2);
     this.keyHeight = new Unit(UnitType.lines, 1.2);
-    this.text = new Text("Arial", Face.plain, black, 9.6, new ZeroOne(0),
+    this.text = new TextFormat("Arial", Face.plain, black, 9.6, new ZeroOne(0),
         new ZeroOne(0), 0, 1);
     this.textAlign = new ZeroOne(0);
   }
@@ -289,11 +289,11 @@ public class Legend {
     this.direction = direction;
   }
 
-  public Text getTitle() {
+  public TextFormat getTitle() {
     return title;
   }
 
-  public void setTitle(Text title) {
+  public void setTitle(TextFormat title) {
     this.title = title;
   }
 
@@ -329,11 +329,11 @@ public class Legend {
     this.keyHeight = keyHeight;
   }
 
-  public Text getText() {
+  public TextFormat getText() {
     return text;
   }
 
-  public void setText(Text text) {
+  public void setText(TextFormat text) {
     this.text = text;
   }
 
@@ -352,17 +352,17 @@ public class Legend {
         (int)round(plotPointSize.width*pixelsPerPoint),
         (int)round(plotPointSize.height*pixelsPerPoint));
 
-    Legend leg = new Legend(
+    LegendFormat leg = new LegendFormat(
         new Rect(grey50, black, 1, LineType.dashed),
         Direction.vertical,
-        new Text("sans", Face.plain, red, 12, new ZeroOne(0), new ZeroOne(0), 0, 1),
+        new TextFormat("sans", Face.plain, red, 12, new ZeroOne(0), new ZeroOne(0), 0, 1),
         new ZeroOne(0.5),
         new Rect(grey90, purple, 0.5, LineType.solid),
         new Unit(UnitType.cm, 1.5),
         new Unit(UnitType.cm, 1),
-        new Text("serif", Face.bold, blue, 8, new ZeroOne(1), new ZeroOne(1), 0, 0),
+        new TextFormat("serif", Face.bold, blue, 8, new ZeroOne(1), new ZeroOne(1), 0, 0),
         new ZeroOne(0.5));
-    leg = new Legend();
+    leg = new LegendFormat();
     leg.setTitleAlign(new ZeroOne(1));
     String title = "Legend";
     List<String> texts = new ArrayList<String>();

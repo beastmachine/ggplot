@@ -35,8 +35,8 @@ import static org.beastmachine.ggplot.theme.Justification.center;
 import static org.beastmachine.ggplot.theme.Line.LineEnd.butt;
 import static org.beastmachine.ggplot.theme.Line.LineType.solid;
 import static org.beastmachine.ggplot.theme.Position.right;
-import static org.beastmachine.ggplot.theme.Text.Face.bold;
-import static org.beastmachine.ggplot.theme.Text.Face.plain;
+import static org.beastmachine.ggplot.theme.TextFormat.Face.bold;
+import static org.beastmachine.ggplot.theme.TextFormat.Face.plain;
 import static org.beastmachine.ggplot.theme.Unit.UnitType.cm;
 import static org.beastmachine.ggplot.theme.Unit.UnitType.lines;
 import static org.beastmachine.ggplot.visual.Colors.black;
@@ -108,7 +108,7 @@ public class Theme {
       this.put(key, new Rect());
     }
     for (KeyText key : KeyText.values()) {
-      this.put(key, new Text());
+      this.put(key, new TextFormat());
     }
     for (KeyUnit key : KeyUnit.values()) {
       this.put(key, new Unit());
@@ -136,7 +136,7 @@ public class Theme {
       this.put(key, new Rect(other.get(key)));
     }
     for (KeyText key : KeyText.values()) {
-      this.put(key, new Text(other.get(key)));
+      this.put(key, new TextFormat(other.get(key)));
     }
     for (KeyUnit key : KeyUnit.values()) {
       this.put(key, new Unit(other.get(key)));
@@ -191,15 +191,15 @@ public class Theme {
     themeValues.put(key, elem);
   }
 
-  public Text get(KeyText key) {
+  public TextFormat get(KeyText key) {
     Object text = themeValues.get(key);
-    if(text != null && text instanceof Text){
-      return (Text)text;
+    if(text != null && text instanceof TextFormat){
+      return (TextFormat)text;
     }
     else return null;//TODO return some default Text?
   }
 
-  public void put(KeyText key, Text elem) {
+  public void put(KeyText key, TextFormat elem) {
     themeValues.put(key, elem);
   }
 
@@ -281,7 +281,7 @@ public class Theme {
     }
 
     @Override
-    public void put(KeyText key, Text elem) {
+    public void put(KeyText key, TextFormat elem) {
       System.err.println("Warning: theme immutable, put command ignored");
     }
 

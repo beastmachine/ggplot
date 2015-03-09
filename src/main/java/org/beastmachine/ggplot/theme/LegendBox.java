@@ -23,10 +23,10 @@ public class LegendBox {
   private Unit legendMargin;
   private Direction legendBox;
   private Justification legendBoxJust;
-  private Legend legendSpec;
+  private LegendFormat legendSpec;
 
   public LegendBox(Unit legendMargin, Direction legendBox,
-      Justification legendBoxJust, Legend legendSpec) {
+      Justification legendBoxJust, LegendFormat legendSpec) {
     this.legendMargin = legendMargin;
     this.legendBox = legendBox;
     this.legendBoxJust = legendBoxJust;
@@ -37,7 +37,7 @@ public class LegendBox {
     this.legendMargin = new Unit(UnitType.cm, 0.2);
     this.legendBox = Direction.vertical;
     this.legendBoxJust = Justification.left;
-    this.legendSpec = new Legend();
+    this.legendSpec = new LegendFormat();
   }
   
   public Dimension2D getRequiredPointsSize(Graphics2D g,
@@ -179,9 +179,9 @@ public class LegendBox {
         (int)round(plotPointSize.width*pixelsPerPoint),
         (int)round(plotPointSize.height*pixelsPerPoint));
     
-    Legend spec = new Legend();
+    LegendFormat spec = new LegendFormat();
     spec.getBackground().setColor(black);
-    spec.setDirection(Legend.Direction.horizontal);
+    spec.setDirection(LegendFormat.Direction.horizontal);
     LegendBox lb = new LegendBox(new Unit(UnitType.lines,1),
         Direction.vertical, Justification.left, spec);
     
