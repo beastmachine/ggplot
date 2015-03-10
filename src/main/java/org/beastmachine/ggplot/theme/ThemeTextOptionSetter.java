@@ -6,7 +6,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.beastmachine.ggplot.theme.Text.Face;
+import org.beastmachine.ggplot.theme.TextFormat.Face;
 import org.beastmachine.ggplot.visual.Colors;
 
 public class ThemeTextOptionSetter implements ThemeOptionSetter {
@@ -39,7 +39,7 @@ public class ThemeTextOptionSetter implements ThemeOptionSetter {
   @Override
   public void setOptions(Theme theme) {
     for (Theme.KeyText key : myTargets) {
-      Text target = theme.get(key);
+      TextFormat target = theme.get(key);
       if (family != null)     { target.setFamily(family); }
       if (face != null)       { target.setFace(face); }
       if (color != null)      { target.setColor(color); }

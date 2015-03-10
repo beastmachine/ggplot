@@ -5,7 +5,7 @@ import static java.lang.Math.round;
 import java.awt.Color;
 import java.awt.Font;
 
-public class Text {
+public class TextFormat {
   private String family;
   private Face face;
   private Color color;
@@ -15,9 +15,9 @@ public class Text {
   private double angle;
   private double lineheight;
   
-  public Text() { }
+  public TextFormat() { }
   
-  public Text(String family, Face face, Color color, double size,
+  public TextFormat(String family, Face face, Color color, double size,
       ZeroOne hjust, ZeroOne vjust, double angle,
       double lineheight) {
     this.family = family;
@@ -30,7 +30,7 @@ public class Text {
     this.lineheight = lineheight;
   }
   
-  public Text(Text other) {
+  public TextFormat(TextFormat other) {
     this(other.family, other.face, other.color, other.size, other.hjust,
         other.vjust, other.angle, other.lineheight);
   }
