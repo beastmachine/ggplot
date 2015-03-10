@@ -1,4 +1,4 @@
-package org.beastmachine.ggplot.theme;
+package org.beastmachine.ggplot.legend;
 
 import java.util.List;
 

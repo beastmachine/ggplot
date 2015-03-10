@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.beastmachine.ggplot.legend.LegendData;
 import org.beastmachine.ggplot.pdf.PDF2D;
 import org.beastmachine.ggplot.pdf.PaintPDF;
 import org.beastmachine.ggplot.theme.Line.LineType;
@@ -19,13 +20,13 @@ import org.beastmachine.ggplot.theme.Unit.UnitType;
 import org.beastmachine.ggplot.visual.Graphics2DState;
 import org.beastmachine.util.GDimension2D;
 
-public class Legend {
+public class LegendBox {
   private Unit legendMargin;
   private Direction legendBox;
   private Justification legendBoxJust;
   private LegendFormat legendSpec;
 
-  public Legend(Unit legendMargin, Direction legendBox,
+  public LegendBox(Unit legendMargin, Direction legendBox,
       Justification legendBoxJust, LegendFormat legendSpec) {
     this.legendMargin = legendMargin;
     this.legendBox = legendBox;
@@ -33,14 +34,14 @@ public class Legend {
     this.legendSpec = legendSpec;
   }
   
-  public Legend() {
+  public LegendBox() {
     this.legendMargin = new Unit(UnitType.cm, 0.2);
     this.legendBox = Direction.vertical;
     this.legendBoxJust = Justification.left;
     this.legendSpec = new LegendFormat();
   }
   
-  public Legend(Theme theme){
+  public LegendBox(Theme theme){
     this.legendMargin = theme.get(Theme.KeyUnit.legend_margin);
     this.legendBox = theme.get(Theme.KeyDirection.legend_box);
     
@@ -177,10 +178,6 @@ public class Legend {
     }
   }
 
-//  public enum Direction {
-//    horizontal,vertical;
-//  }
-//
   public enum Justification {
     top, bottom, left, right;
   }
@@ -195,7 +192,7 @@ public class Legend {
     LegendFormat spec = new LegendFormat();
     spec.getBackground().setColor(black);
     spec.setDirection(Direction.horizontal);
-    Legend lb = new Legend(new Unit(UnitType.lines,1),
+    LegendBox lb = new LegendBox(new Unit(UnitType.lines,1),
         Direction.vertical, Justification.bottom, spec);
     
     String title1 = "Legend";
