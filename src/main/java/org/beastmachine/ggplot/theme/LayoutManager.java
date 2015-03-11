@@ -74,6 +74,9 @@ public class LayoutManager implements Paintable {
     maxPointsX -= plotMarginRight;
     maxPointsY -= plotMarginBottom;
     assertViablePlot(minPointsX, maxPointsX, minPointsY, maxPointsY);
+    //Need to know stuff from aesthetic in order to make legend
+    
+    
     Position legendPosition = theme.get(Theme.KeyPosition.legend_position);
 //    this.legend.getRequiredPointsSize(g, title, texts);
     if(legendPosition == Position.right){
