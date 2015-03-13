@@ -37,5 +37,9 @@ public class Text implements Paintable {
     return format.getLineHeight(pixelsPerPoint);
   }
 
+  public Dimension2D getRequiredPointsSize(Graphics2D g) {
+    return new GDimension2D(format.getLineWidth(g, this.content, 1),format.getLineHeight(1));
+  }
+
  
 }

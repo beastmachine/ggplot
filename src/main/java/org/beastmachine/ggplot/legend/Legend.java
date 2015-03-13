@@ -17,7 +17,7 @@ import org.beastmachine.ggplot.visual.Paintable;
 import com.google.common.base.Preconditions;
 
 
-public class Legend implements Paintable { //TODO this should be able to draw itself but suddenly I dont know what interface to use
+public class Legend { //TODO this should be able to draw itself but suddenly I dont know what interface to use
   
   private ArrayList<LegendData> legendData;
   private LegendBox legendBox;
@@ -131,8 +131,7 @@ legend_key is either:
     return (aesthetic == Aes.Aesthetic.alpha || aesthetic == Aes.Aesthetic.color || aesthetic == Aes.Aesthetic.colour || 
         aesthetic == Aes.Aesthetic.shape || aesthetic == Aes.Aesthetic.size || aesthetic == Aes.Aesthetic.linetype || aesthetic == Aes.Aesthetic.fill);
   }
-
-  @Override
+ 
   public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
     double pixelsPerPoint = (double)pixels.getWidth()/(double)points.getWidth();
     this.legendBox.paint2D(g, legendData, this.legendBox.getRequiredPointsSize(g, legendData), pixelsPerPoint);

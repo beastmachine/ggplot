@@ -10,6 +10,7 @@ import static org.beastmachine.ggplot.GGPlot.axisTitleX;
 import static org.beastmachine.ggplot.GGPlot.axisTitleY;
 import static org.beastmachine.ggplot.GGPlot.legendBackground;
 import static org.beastmachine.ggplot.GGPlot.legendJustification;
+import static org.beastmachine.ggplot.GGPlot.legendDirection;
 import static org.beastmachine.ggplot.GGPlot.legendKey;
 import static org.beastmachine.ggplot.GGPlot.legendKeySize;
 import static org.beastmachine.ggplot.GGPlot.legendMargin;
@@ -79,6 +80,7 @@ public class Theme {
         legendTitle().size(9.6).face(bold).hjust(new ZeroOne(0)),
         legendPosition().position(right),
         legendJustification().justification(center),
+        legendDirection().position(Direction.vertical),
 
         panelBackground().fill(grey90).color(invisible),
         panelBorder().blank(),

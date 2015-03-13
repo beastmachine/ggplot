@@ -46,12 +46,15 @@ import org.beastmachine.ggplot.geom.point.GeometryJitter;
 import org.beastmachine.ggplot.geom.point.GeometryPoint;
 import org.beastmachine.ggplot.geom.point.GeometryPointRange;
 import org.beastmachine.ggplot.geom.text.GeometryText;
+import org.beastmachine.ggplot.legend.Legend;
 import org.beastmachine.ggplot.pdf.PaintPDF;
 import org.beastmachine.ggplot.stat.StatBin;
 import org.beastmachine.ggplot.stat.StatQuantile;
 import org.beastmachine.ggplot.stat.StatSmooth;
 import org.beastmachine.ggplot.stat.Statistic;
+import org.beastmachine.ggplot.theme.LayoutManager;
 import org.beastmachine.ggplot.theme.Line;
+import org.beastmachine.ggplot.theme.TextFormat;
 import org.beastmachine.ggplot.theme.Theme;
 import org.beastmachine.ggplot.theme.ThemeDirectionOptionSetter;
 import org.beastmachine.ggplot.theme.ThemeJustificationOptionSetter;
@@ -64,6 +67,7 @@ import org.beastmachine.ggplot.theme.ThemeUnitOptionSetter;
 import org.beastmachine.ggplot.theme.ThemeZeroOneOptionSetter;
 import org.beastmachine.ggplot.theme.Theme.KeyUnit;
 import org.beastmachine.ggplot.visual.Paintable;
+import org.beastmachine.util.Text;
 
 import com.google.common.base.Preconditions;
 
@@ -361,26 +365,33 @@ public class GGPlot implements Paintable{
   public static void ggsave(GGPlot g, String file){
     try {
       PaintPDF.paintToPDF(g, new Dimension(640,480),
-          new Dimension(792,612), file); //TODO pull these numbers from somewhere
+          new Dimension(640,480), file); //TODO pull these numbers from somewhere
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
-    double pixelsPerPoint = (double)pixels.getWidth() / (double)points.getWidth();
-
-    double[] margin = theme.get(KeyUnit.plot_margin).getPixelsArray(pixelsPerPoint);
-
-    int topMarginPixels = (int)round(margin[0]);
-    int rightMarginPixels = (int)round(margin[1]);
-    int bottomMarginPixels = (int)round(margin[2]);
-    int leftMarginPixels = (int)round(margin[3]);
-
-    myFacet.setArea(leftMarginPixels, (int)(pixels.getWidth() - rightMarginPixels), 
-        topMarginPixels, (int)(pixels.getHeight() - bottomMarginPixels));
-
-    myFacet.paint2D(g, pixels, points);
+//    double pixelsPerPoint = (double)pixels.getWidth() / (double)points.getWidth();
+//
+//    double[] margin = theme.get(KeyUnit.plot_margin).getPixelsArray(pixelsPerPoint);
+//
+//    int topMarginPixels = (int)round(margin[0]);
+//    int rightMarginPixels = (int)round(margin[1]);
+//    int bottomMarginPixels = (int)round(margin[2]);
+//    int leftMarginPixels = (int)round(margin[3]);
+//
+//    myFacet.setArea(leftMarginPixels, (int)(pixels.getWidth() - rightMarginPixels), 
+//        topMarginPixels, (int)(pixels.getHeight() - bottomMarginPixels));
+//
+//    myFacet.paint2D(g, pixels, points);
+    Legend legend = Legend.buildLegend(this.theme, this.myAes, this.myData);
+    Text ggtitle = new Text("GGTitle", theme.get(Theme.KeyText.plot_title)); //TODO change this, no hard codey
+    
+    Text xlab = new Text(myAes.getVariable(Aes.Aesthetic.x),theme.get(Theme.KeyText.axis_title_x));//TODO change string to take from somewhere else, this is just default
+    Text ylab = new Text(myAes.getVariable(Aes.Aesthetic.y), theme.get(Theme.KeyText.axis_title_y));//TODO change string to take from somewhere else, this is just default
+    LayoutManager lm = new LayoutManager(this.theme,legend, ggtitle, xlab, ylab, this.myFacet);
+    lm.paint2D(g, pixels, points);
   }
 
 

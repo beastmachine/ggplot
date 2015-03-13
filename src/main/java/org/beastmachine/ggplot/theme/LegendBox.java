@@ -59,7 +59,7 @@ public class LegendBox {
     double width = 0;
     double height = 0;
 
-    double halfLine = 0.5*0.2*72; // unit(0.5, "lines") in points
+    double halfLine = new Unit(Unit.UnitType.lines, 0.5).getPoints();//0.5*0.2*72; // unit(0.5, "lines") in points
     double legendMargin = this.legendMargin.getBigpts();
     List<Dimension2D> legendSizes = new ArrayList<Dimension2D>();
     for (LegendData ld : legends) {
@@ -114,7 +114,7 @@ public class LegendBox {
 
   private void paint2DVertical(Graphics2D g, List<LegendData> legends,
       Dimension2D bounds, double pixelsPerPoint) {
-    double halfLine = 0.5*0.2*72; // unit(0.5, "lines") in points
+    double halfLine = new Unit(Unit.UnitType.lines, 0.5).getPoints();// unit(0.5, "lines") in points
     double legendMargin = this.legendMargin.getBigpts();
 
     double innerWidth =
@@ -147,7 +147,7 @@ public class LegendBox {
 
   private void paint2DHorizontal(Graphics2D g, List<LegendData> legends,
       Dimension2D bounds, double pixelsPerPoint) {
-    double halfLine = 0.5*0.2*72; // unit(0.5, "lines") in points
+    double halfLine = new Unit(Unit.UnitType.lines, 0.5).getPoints();//0.5*0.2*72; // unit(0.5, "lines") in points
     double legendMargin = this.legendMargin.getBigpts();
 
     double innerHeight =

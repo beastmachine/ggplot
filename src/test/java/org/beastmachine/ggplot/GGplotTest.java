@@ -17,6 +17,16 @@ public class GGplotTest {
 		GGPlot g = ggplot(dataframe().c("x",v1).c("y",v2),aes().x("x").y("y")).geom_point();
 		ggsave(g, "./src/main/resources/ggplot.pdf");  
 	}
+	
+	@Test
+	public void testLegend(){
+	  int[] v1 = {1,2,3,4};
+    int[] v2 = {1,2,3,4};
+    String[] s1 = {"swanky","swanky","skanky","skanky"};
+    System.out.println("current corking directory "+new File("./").getAbsolutePath());
+    GGPlot g = ggplot(dataframe().c("x",v1).c("y",v2).c("Person Type", s1),aes().x("x").y("y").color("Person Type")).geom_point();
+    ggsave(g, "./src/main/resources/legend.pdf");
+	}
 
 
 	@Test
