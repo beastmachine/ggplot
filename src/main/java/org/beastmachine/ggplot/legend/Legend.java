@@ -1,5 +1,7 @@
 package org.beastmachine.ggplot.legend;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -10,11 +12,12 @@ import org.beastmachine.ggplot.Aes;
 import org.beastmachine.ggplot.Aes.Aesthetic;
 import org.beastmachine.ggplot.theme.LegendBox;
 import org.beastmachine.ggplot.theme.Theme;
+import org.beastmachine.ggplot.visual.Paintable;
 
 import com.google.common.base.Preconditions;
 
 
-public class Legend { //TODO this should be able to draw itself but suddenly I dont know what interface to use
+public class Legend implements Paintable { //TODO this should be able to draw itself but suddenly I dont know what interface to use
   
   private ArrayList<LegendData> legendData;
   private LegendBox legendBox;
@@ -28,6 +31,10 @@ public class Legend { //TODO this should be able to draw itself but suddenly I d
   public Legend(ArrayList<LegendData> legendData, LegendBox legendBox){
     this.legendData = legendData;
     this.legendBox = legendBox;
+  }
+  
+  public Dimension2D getRequiredPointsSize(Graphics2D g){
+    return legendBox.getRequiredPointsSize(g, legendData);
   }
   
   /**
@@ -123,6 +130,12 @@ legend_key is either:
   private static boolean isAestheticDiscreteMappable(Aesthetic aesthetic) {
     return (aesthetic == Aes.Aesthetic.alpha || aesthetic == Aes.Aesthetic.color || aesthetic == Aes.Aesthetic.colour || 
         aesthetic == Aes.Aesthetic.shape || aesthetic == Aes.Aesthetic.size || aesthetic == Aes.Aesthetic.linetype || aesthetic == Aes.Aesthetic.fill);
+  }
+
+  @Override
+  public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
+    double pixelsPerPoint = (double)pixels.getWidth()/(double)points.getWidth();
+    this.legendBox.paint2D(g, legendData, this.legendBox.getRequiredPointsSize(g, legendData), pixelsPerPoint);
   }
 
 

@@ -4,6 +4,8 @@ import static java.lang.Math.round;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
 
 public class TextFormat {
   private String family;
@@ -82,6 +84,11 @@ public class TextFormat {
   
   public double getLineHeight(double pixelsPerPoint) {
     return lineheight*pixelsPerPoint;
+  }
+  
+  public double getLineWidth(Graphics2D g, String s, double pixelsPerPoint){
+    FontMetrics fm = g.getFontMetrics(this.getFont(pixelsPerPoint));
+    return fm.stringWidth(s);
   }
   
   public double getVerticalJustification() {

@@ -1,10 +1,13 @@
 package org.beastmachine.ggplot.theme;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Dimension2D;
 
 import org.beastmachine.ggplot.facet.Facet;
+import org.beastmachine.ggplot.legend.Legend;
 import org.beastmachine.ggplot.visual.Paintable;
+import org.beastmachine.util.Text;
 
 import com.google.common.base.Preconditions;
 
@@ -12,14 +15,14 @@ public class LayoutManager implements Paintable {
 
   
   private Theme theme;
-  private LegendFormat legend;
-  private TextFormat ggtitle;
-  private TextFormat xlab;
-  private TextFormat ylab;
+  private Legend legend;
+  private Text ggtitle;
+  private Text xlab;
+  private Text ylab;
   private Facet facet;
 
-  public LayoutManager(Theme themey, LegendFormat legend, 
-      TextFormat ggtitle, TextFormat xlab, TextFormat ylab, Facet facet){
+  public LayoutManager(Theme themey, Legend legend, 
+      Text ggtitle, Text xlab, Text ylab, Facet facet){
     this.theme = themey;
     this.legend = legend;
     this.ggtitle = ggtitle;
@@ -59,28 +62,61 @@ public class LayoutManager implements Paintable {
 
   @Override
   public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points){
+    double pixelsPerPointX = (double)pixels.getWidth()/(double)points.getWidth();
+    double pixelsPerPointY = (double)pixels.getHeight()/(double)points.getHeight();
     double minPointsX = 0.0;
     double maxPointsX = points.getWidth();
     double minPointsY = 0.0;
     double maxPointsY = points.getHeight();
+    
+    double minPixelsX = 0.0;
+    double maxPixelsX = pixels.getWidth();
+    double minPixelsY = 0.0;
+    double maxPixelsY = pixels.getHeight();
+    
     Unit plotMargin = this.theme.get(Theme.KeyUnit.plot_margin);
+    
     double[] plotMarginPoints = plotMargin.getPointsArray();
+    
     double plotMarginLeft = plotMarginPoints[3];
     double plotMarginRight = plotMarginPoints[1];
     double plotMarginTop = plotMarginPoints[0];
     double plotMarginBottom = plotMarginPoints[2];
+    
     minPointsX += plotMarginLeft;
     minPointsY += plotMarginTop;
     maxPointsX -= plotMarginRight;
     maxPointsY -= plotMarginBottom;
-    assertViablePlot(minPointsX, maxPointsX, minPointsY, maxPointsY);
-    //Need to know stuff from aesthetic in order to make legend
     
+    minPixelsX += plotMarginLeft*pixelsPerPointX;
+    maxPixelsX -= plotMarginRight*pixelsPerPointX;
+    minPixelsY += plotMarginTop*pixelsPerPointY;
+    maxPixelsY -= plotMarginBottom*pixelsPerPointY;
+    
+    assertViablePlot(minPointsX, maxPointsX, minPointsY, maxPointsY);
     
     Position legendPosition = theme.get(Theme.KeyPosition.legend_position);
-//    this.legend.getRequiredPointsSize(g, title, texts);
+    
+    //print ggtitle
+    g.translate(minPixelsX, minPixelsY);
+    this.ggtitle.paint2D(g, new Dimension((int)(maxPixelsX-minPixelsX), (int)(maxPixelsY-minPixelsY)), new Dimension((int)(maxPointsX-minPointsX), (int)(maxPointsY-minPointsY)));
+    g.translate(-minPixelsX, -minPixelsY);
+    double lineHeight = this.ggtitle.getLineHeight(pixelsPerPointY);
+    minPixelsY += lineHeight;
+    minPointsY += lineHeight/pixelsPerPointY;
+    
+    //TODO I need to do the facet strip here but for the moment I'll assume no facet
+    
+    Dimension2D legendDim = this.legend.getRequiredPointsSize(g);
     if(legendPosition == Position.right){
-//      double legendWidth = this.legend.
+      maxPointsX -= legendDim.getWidth();
+      maxPixelsX -= legendDim.getWidth()*pixelsPerPointX;
+      
+      double legendLeft = maxPixelsX;
+      double legendTop = minPixelsY;
+      g.translate(legendLeft, legendTop);
+      legend.paint2D(g,pixels, points);
+      g.translate(-legendLeft, -legendTop);
     }
     else if(legendPosition == Position.left){
       
