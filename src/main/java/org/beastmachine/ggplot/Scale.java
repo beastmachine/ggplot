@@ -8,13 +8,19 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.beastmachine.dataframe.Column;
 import org.beastmachine.dataframe.DataFrame;
 import org.beastmachine.ggplot.coord.Coord;
+import org.beastmachine.ggplot.theme.TextFormat;
+import org.beastmachine.ggplot.theme.Theme;
+import org.beastmachine.ggplot.theme.Unit;
 import org.beastmachine.ggplot.visual.Colors;
 import org.beastmachine.ggplot.visual.Graphics2DState;
 import org.beastmachine.ggplot.visual.Paintable;
+import org.beastmachine.util.GDimension2D;
 import org.beastmachine.util.NumberFormatter;
+import org.beastmachine.util.Text;
 
 import com.google.common.base.Preconditions;
 
@@ -32,13 +38,11 @@ public class Scale implements Paintable, GGPlot.Scalable{
   //	private DataFrame data;
   //	private DataFrame plotData;
   private List<Layer> layers;
-  private int minX;
-  private int maxX;
-  private int minY;
-  private int maxY;
-  private ArrayList<String> xBreaks;
-  private ArrayList<String> yBreaks;
+  private ArrayList<DataGuide> xBreaks;
+  private ArrayList<DataGuide> yBreaks;
   private double xRange;
+  private double maxX;
+  private double maxY;
   private double minXData;
   private double maxXData;
   private double minYData;
@@ -47,36 +51,41 @@ public class Scale implements Paintable, GGPlot.Scalable{
   private double maxXDataOnPlot;
   private StepHolder xStep;
   private StepHolder yStep;
-  private int xGuideHeight;
-  private int yGuideWidth;
+  private Integer xGuideHeight;
+  private Integer yGuideWidth;
   private double maxYDataOnPlot;
   private double minYDataOnPlot;
   private Font g;
   private boolean plotDataCreated;
+  private Theme theme;
 
-  public Scale(Coord myCoord, List<Layer> layers) {
+  public Scale(Coord myCoord, List<Layer> layers, Theme theme) {
     this.myCoord = myCoord;
     this.layers = layers;
     xTransform = new IdentityTransform();
     yTransform = new IdentityTransform();
+    this.theme = theme;
 
   }
- 
 
   @Override
   public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
+    maxX = pixels.getWidth();
+    maxY = pixels.getHeight();
+    
+    double pixelsPerPoint = pixels.getWidth()/points.getWidth();
     Graphics2DState state = new Graphics2DState(g);
 
     if(!plotDataCreated){
       createPlotData(pixels, points);
     }
 
-    System.out.println("pixel range to work in for scale "+minX+" "+maxX+" "+minY+" "+maxY);
-    xGuideHeight = getXGuideHeight(g);
-    yGuideWidth = getYGuideWidth(g);
+    //    System.out.println("pixel range to work in for scale "+minX+" "+maxX+" "+minY+" "+maxY);
+    xGuideHeight = getXGuideHeight(g, pixelsPerPoint);
+    yGuideWidth = getYGuideWidth(g,pixelsPerPoint);
     System.out.println("xguideheight "+xGuideHeight+" yguidewidth "+yGuideWidth);
-    double pixelsY = (maxY-minY-xGuideHeight);
-    double pixelsX = (maxX-minX-yGuideWidth);
+    double pixelsY = (pixels.getHeight()-xGuideHeight);
+    double pixelsX = (pixels.getWidth()-yGuideWidth);
     double pixelsDiag = Math.sqrt(Math.pow(pixelsY,2)+Math.pow(pixelsX, 2));
     double pixelsDataDiag = pixelsDiag - 0.5*72.0;//TODO pull this from theme .75 inches diag to start of data and 72 dpi
     System.out.println("pixels diag "+pixelsDiag+" pixelsDataDiag "+pixelsDataDiag);
@@ -95,14 +104,14 @@ public class Scale implements Paintable, GGPlot.Scalable{
 
     g.setColor(Colors.grey87);
     //	  g.drawRect(minX+yGuideWidth , minY, maxX-minX-yGuideWidth, maxY-minY-xGuideHeight);
-    System.out.println("first attempt is "+(minX+yGuideWidth)+" "+(minY)+" "+(maxX-minX-yGuideWidth)+" "+(maxY-minY-xGuideHeight));
+    //    System.out.println("first attempt is "+(minX+yGuideWidth)+" "+(minY)+" "+(maxX-minX-yGuideWidth)+" "+(maxY-minY-xGuideHeight));
 
     //	  g.setColor(Color.red); //TODO remove this, just a guide
     //	  g.drawRect((int)((pixelsX-pixelsSubrangeX)/2.0)+minX+yGuideWidth, minY+(int)((pixelsY-pixelsSubrangeY)/2.0), 
     //	  		(int)Math.round(pixelsSubrangeX), (int)Math.round(pixelsSubrangeY));
-    g.fillRect(xDataPointToPixelLocation(minXDataOnPlot), yDataPointToPixelLocation(maxYDataOnPlot), 
-        xDataPointToPixelLocation(maxXDataOnPlot)-xDataPointToPixelLocation(minXDataOnPlot), 
-        yDataPointToPixelLocation(minYDataOnPlot)-yDataPointToPixelLocation(maxYDataOnPlot));
+    g.fillRect((int)Math.round(xDataPointToPixelLocation(minXDataOnPlot)), (int)Math.round(yDataPointToPixelLocation(maxYDataOnPlot)), 
+        (int)Math.round(xDataPointToPixelLocation(maxXDataOnPlot)-xDataPointToPixelLocation(minXDataOnPlot)), 
+        (int)Math.round(yDataPointToPixelLocation(minYDataOnPlot)-yDataPointToPixelLocation(maxYDataOnPlot)));
     System.out.println("second attempt is "+(xDataPointToPixelLocation(minXDataOnPlot))+" "+(yDataPointToPixelLocation(minYDataOnPlot))+" "+
         (xDataPointToPixelLocation(maxXDataOnPlot)-xDataPointToPixelLocation(minXDataOnPlot))+" "+(yDataPointToPixelLocation(maxYDataOnPlot)-yDataPointToPixelLocation(minYDataOnPlot)));
 
@@ -110,31 +119,64 @@ public class Scale implements Paintable, GGPlot.Scalable{
     drawYGuide(g);
     System.out.println("xguideheight "+xGuideHeight);
 
-    for(Layer l: layers){
-      l.draw(this, g);
-    }
+    //    for(Layer l: layers){
+    //      l.draw(this, g);
+    //    }
 
 
     state.restore(g);
   }
 
-  private int getYGuideWidth(Graphics2D g) {
-    g.setFont(new Font("Arial", Font.PLAIN, 4)); //TODO pull this from somewhere
-    int yTickLength = 2; //TODO pull this from somewhere
-    double maxWidth = Double.NEGATIVE_INFINITY;
-    for(String s: yBreaks){
-      double stringW = g.getFontMetrics().getStringBounds(s, g).getWidth();
-      maxWidth = Math.max(maxWidth, stringW);
-    }
-
-    return (int)Math.round(maxWidth + yTickLength);
+  private int getYGuideWidth(Graphics2D g, double pixelsPerPoint) {
+    if(yGuideWidth != null)
+      return yGuideWidth.intValue();
+    double tickLength = theme.get(Theme.KeyUnit.axis_ticks_length).getPixels(pixelsPerPoint);
+    double textHeight = theme.get(Theme.KeyText.axis_text_y).getLineHeight(g, pixelsPerPoint);
+    double margin = theme.get(Theme.KeyUnit.axis_ticks_margin).getPixels(pixelsPerPoint);
+    yGuideWidth = (int)Math.round(tickLength + textHeight + margin);
+    return yGuideWidth.intValue();
   }
 
-  private int getXGuideHeight(Graphics2D g) {
-    g.setFont(new Font("Arial", Font.PLAIN, 4)); //TODO pull this from somewhere
-    int xTickLength = 2; //TODO pull this from somewhere
-    double stringHeight = g.getFontMetrics().getStringBounds("exampletext", g).getHeight();
-    return (int)Math.round(stringHeight + xTickLength);
+  private int getXGuideHeight(Graphics2D g, double pixelsPerPoint) {
+    if(xGuideHeight != null)
+      return xGuideHeight.intValue();
+    double tickLength = theme.get(Theme.KeyUnit.axis_ticks_length).getPixels(pixelsPerPoint);
+    double textHeight = theme.get(Theme.KeyText.axis_text_x).getLineHeight(g, pixelsPerPoint);
+    double margin = theme.get(Theme.KeyUnit.axis_ticks_margin).getPixels(pixelsPerPoint);
+    xGuideHeight = (int)Math.round(tickLength + textHeight + margin);
+    return xGuideHeight.intValue();
+  }
+
+  public void drawXTicksAndText(Graphics2D g, Dimension2D pixels, Dimension2D points){
+    double pixelsPerPoint = pixels.getWidth()/points.getWidth();
+    if(!plotDataCreated){
+      createPlotData(pixels, points);
+      getYGuideWidth(g, pixelsPerPoint);
+      getXGuideHeight(g, pixelsPerPoint);
+    }
+    TextFormat xText = theme.get(Theme.KeyText.axis_text_x);
+    for(int ii = 0; ii < xBreaks.size(); ii++){
+      String content = xBreaks.get(ii).dataLabel;
+      double xbreak = xBreaks.get(ii).dataBreak;
+      double stringWidth = g.getFontMetrics(xText.getFont(pixelsPerPoint)).getStringBounds(content, g).getWidth();
+      Text xBreakText = new Text(content, xText);
+      double stringHeight = xText.getLineHeight(g, pixelsPerPoint);
+      double xguideX = xDataPointToPixelLocation(xbreak) - (int)(stringWidth/2.0);
+
+      double xtickX = xDataPointToPixelLocation(xbreak);
+      double xtickY = pixels.getHeight() - 
+          theme.get(Theme.KeyText.axis_text_x).getLineHeight(g, pixelsPerPoint) -
+          theme.get(Theme.KeyUnit.axis_ticks_margin).getPixels(pixelsPerPoint);
+      double tickLength = theme.get(Theme.KeyUnit.axis_ticks_length).getPixels(pixelsPerPoint);
+      g.drawLine((int)Math.round(xtickX), (int)Math.round(xtickY), (int)Math.round(xtickX), (int)Math.round(xtickY-tickLength));
+      System.out.println("drawing tick at "+xtickX);
+
+      g.translate(xguideX, xtickY);
+      xBreakText.paint2D(g, new GDimension2D(stringWidth, stringHeight), 
+          new GDimension2D(stringWidth/pixelsPerPoint, stringHeight/pixelsPerPoint));
+      g.translate(-xguideX, -xtickY);
+
+    }
   }
 
   private void drawXGuide(Graphics2D g) {
@@ -147,34 +189,34 @@ public class Scale implements Paintable, GGPlot.Scalable{
     double stringHeight = g.getFontMetrics().getStringBounds("exampletext", g).getHeight();
     int xlabY = (int) Math.round(maxY);
     for(int ii = 0; ii < xBreaks.size(); ii++){
-      String s = xBreaks.get(ii);
-      double value = Double.parseDouble(s);
+      String s = xBreaks.get(ii).dataLabel;
+      double value = xBreaks.get(ii).dataBreak;
       double stringWidth = g.getFontMetrics().getStringBounds(s, g).getWidth();
       //	  	System.out.println("string width of "+s+" "+stringWidth);
-      int xguideX = xDataPointToPixelLocation(value) - (int)(stringWidth/2.0);
+      double xguideX = xDataPointToPixelLocation(value) - (int)(stringWidth/2.0);
       //	  	System.out.println("attempting to draw string "+s+" at "+xguideX+", "+xlabY+" and this string is of width "+stringWidth+" with "+s.length()+" chars");
       g.setColor(xguideColor);
-      g.drawString(s, xguideX, xlabY);
+      g.drawString(s, (int)Math.round(xguideX), (int)Math.round(xlabY));
       g.setColor(xTickColor);
       g.setStroke(xMajorTickStroke);
-      int xtickX = xDataPointToPixelLocation(value);
-      g.drawLine(xtickX, (int)yDataPointToPixelLocation(minYDataOnPlot), xtickX, (int)yDataPointToPixelLocation(minYDataOnPlot)+xTickLength);
+      double xtickX = xDataPointToPixelLocation(value);
+      g.drawLine((int)Math.round(xtickX), (int)Math.round(yDataPointToPixelLocation(minYDataOnPlot)), (int)Math.round(xtickX), (int)Math.round(yDataPointToPixelLocation(minYDataOnPlot)+xTickLength));
       g.setColor(Colors.white); //TODO look this up somewhere
-      g.drawLine(xtickX, (int)yDataPointToPixelLocation(minYDataOnPlot), xtickX, (int)yDataPointToPixelLocation(maxYDataOnPlot));
+      g.drawLine((int)Math.round(xtickX), (int)Math.round(yDataPointToPixelLocation(minYDataOnPlot)), (int)Math.round(xtickX), (int)Math.round(yDataPointToPixelLocation(maxYDataOnPlot)));
       //	  	System.out.println("xstep "+xStep.step+" maxXDataOnPlot "+maxXDataOnPlot+" "+value+" "+(value - xStep.step/2.0 > minXDataOnPlot));
       if(value - xStep.step/2.0 > minXDataOnPlot){
         g.setStroke(xMinorTickStroke);//TODO set this from somewhere
         xtickX = xDataPointToPixelLocation(value-xStep.step/2.0);
         g.setColor(Colors.gray91); //TODO look this up somewhere
         //	  		g.drawLine(xtickX, (int)(xlabY-stringHeight-xTickLength), xtickX, minY);
-        g.drawLine(xtickX, (int)yDataPointToPixelLocation(minYDataOnPlot), xtickX, (int)yDataPointToPixelLocation(maxYDataOnPlot));
+        g.drawLine((int)Math.round(xtickX), (int)Math.round(yDataPointToPixelLocation(minYDataOnPlot)), (int)Math.round(xtickX), (int)Math.round(yDataPointToPixelLocation(maxYDataOnPlot)));
       }
       if(value+ xStep.step/2.0 < maxXDataOnPlot){
         g.setStroke(xMinorTickStroke);//TODO set this from somewhere
         xtickX = xDataPointToPixelLocation(value+xStep.step/2.0);
         g.setColor(Colors.grey91); //TODO look this up somewhere
         //	  		g.drawLine(xtickX, (int)(xlabY-stringHeight-xTickLength), xtickX, minY);
-        g.drawLine(xtickX, (int)yDataPointToPixelLocation(minYDataOnPlot), xtickX, (int)yDataPointToPixelLocation(maxYDataOnPlot));
+        g.drawLine((int)Math.round(xtickX), (int)Math.round(yDataPointToPixelLocation(minYDataOnPlot)), (int)Math.round(xtickX), (int)Math.round(yDataPointToPixelLocation(maxYDataOnPlot)));
       }
     }
   }
@@ -191,50 +233,51 @@ public class Scale implements Paintable, GGPlot.Scalable{
     for(int ii = 0; ii < yBreaks.size(); ii++){
 
 
-      String s = yBreaks.get(ii);
+      String s = yBreaks.get(ii).dataLabel;
       double stringWidth = g.getFontMetrics().getStringBounds(s, g).getWidth();
-      double value = Double.parseDouble(s);
-      System.out.println("string width of "+s+" "+stringHeight);
-      int ylabX = (int) Math.round(minX);
-      int yguideY = yDataPointToPixelLocation(value) + (int)(stringHeight/2.0);
+      double value = yBreaks.get(ii).dataBreak;
+      int ylabX = 0;
+      double yguideY = yDataPointToPixelLocation(value) + stringHeight/2.0;
       //	  	System.out.println("attempting to draw string "+s+" at "+ylabX+", "+yguideY+" and this string is of width "+stringWidth+" with "+s.length()+" chars");
       g.setColor(yguideColor);
       //	  	AffineTransform orig = g.getTransform();
       //	  	g.rotate(-Math.PI/2.0);
-      g.drawString(s, ylabX, yguideY);
+      //      g.drawString(s, ylabX, yguideY);
 
       //	  	g.setTransform(orig);
       //	  	g.rotate(Math.PI/2.0);
       g.setColor(yTickColor);
       g.setStroke(yMajorTickStroke);
-      int ytickY = yDataPointToPixelLocation(value);
-      g.drawLine((int)xDataPointToPixelLocation(minXDataOnPlot)-1-yTickLength, ytickY, (int)xDataPointToPixelLocation(minXDataOnPlot)-1, ytickY);
+      double ytickY = yDataPointToPixelLocation(value);
+      g.drawLine((int)Math.round(xDataPointToPixelLocation(minXDataOnPlot)-1-yTickLength), (int)Math.round(ytickY), (int)Math.round(xDataPointToPixelLocation(minXDataOnPlot)-1), (int)Math.round(ytickY));
       g.setColor(Colors.white); //TODO look this up somewhere
-      g.drawLine((int)xDataPointToPixelLocation(minXDataOnPlot)-1, ytickY, xDataPointToPixelLocation(maxXDataOnPlot), ytickY);
+      g.drawLine((int)Math.round(xDataPointToPixelLocation(minXDataOnPlot)-1), (int)Math.round(ytickY), (int)Math.round(xDataPointToPixelLocation(maxXDataOnPlot)), (int)Math.round(ytickY));
       System.out.println("xstep "+xStep.step+" maxXDataOnPlot "+maxXDataOnPlot+" "+value+" "+(value - xStep.step/2.0 > minXDataOnPlot));
       if(value - xStep.step/2.0 > minXDataOnPlot){
         g.setStroke(yMinorTickStroke);//TODO set this from somewhere
         ytickY = yDataPointToPixelLocation(value-yStep.step/2.0);
         g.setColor(Colors.gray91); //TODO look this up somewhere
-        g.drawLine((int)xDataPointToPixelLocation(minXDataOnPlot)-1, ytickY, xDataPointToPixelLocation(maxXDataOnPlot), ytickY);
+        g.drawLine((int)Math.round(xDataPointToPixelLocation(minXDataOnPlot)-1), (int)Math.round(ytickY), (int)Math.round(xDataPointToPixelLocation(maxXDataOnPlot)), (int)Math.round(ytickY));
       }
       if(value+ xStep.step/2.0 < maxXDataOnPlot){
         g.setStroke(yMinorTickStroke);//TODO set this from somewhere
         ytickY = yDataPointToPixelLocation(value+yStep.step/2.0);
         g.setColor(Colors.grey91); //TODO look this up somewhere
-        g.drawLine((int)xDataPointToPixelLocation(minXDataOnPlot)-1, ytickY, xDataPointToPixelLocation(maxXDataOnPlot), ytickY);
+        g.drawLine((int)Math.round(xDataPointToPixelLocation(minXDataOnPlot)-1), (int)Math.round(ytickY), (int)Math.round(xDataPointToPixelLocation(maxXDataOnPlot)), (int)Math.round(ytickY));
       }
     }
   }
 
-  public int xDataPointToPixelLocation(double d){
-    return minX + yGuideWidth + (int)(Math.round(minXDataOnPlot+ (d-minXDataOnPlot)/
-        (maxXDataOnPlot-minXDataOnPlot)*(maxX-(minX+yGuideWidth))));
+  public double xDataPointToPixelLocation(double d){
+    
+    System.out.println(yGuideWidth+" "+minXDataOnPlot+" "+maxXDataOnPlot+" ");
+    return yGuideWidth + (minXDataOnPlot+ (d-minXDataOnPlot)/
+        (maxXDataOnPlot-minXDataOnPlot)*(maxX-(yGuideWidth)));
   }
 
-  public int yDataPointToPixelLocation(double d){ //TODO not done
-    return maxY - xGuideHeight - (int)(Math.round(minYDataOnPlot+ (d-minYDataOnPlot)/
-        (maxYDataOnPlot-minYDataOnPlot)*(maxY-(minY+xGuideHeight))));
+  public double yDataPointToPixelLocation(double d){ //TODO not done
+    return maxY - xGuideHeight - (minYDataOnPlot+ (d-minYDataOnPlot)/
+        (maxYDataOnPlot-minYDataOnPlot)*(maxY-(xGuideHeight)));
   }
 
   private void createPlotData(Dimension2D pixels, Dimension2D points) {
@@ -277,7 +320,7 @@ public class Scale implements Paintable, GGPlot.Scalable{
   }
 
 
-  private ArrayList<String> calcAxisBreaksAndLimits(double minval, double maxval, StepHolder stepHolder){
+  private ArrayList<DataGuide> calcAxisBreaksAndLimits(double minval, double maxval, StepHolder stepHolder){
     double diff = maxval - minval;
     double base10 = Math.log10(diff);
     double power = Math.floor(base10);
@@ -287,7 +330,8 @@ public class Scale implements Paintable, GGPlot.Scalable{
     return calcAxisBreaksAndLimits(minval,maxval, step);
   }
 
-  private ArrayList<String> calcAxisBreaksAndLimits(double minval, double maxval, int nlabs, StepHolder stepHolder){
+
+  private ArrayList<DataGuide> calcAxisBreaksAndLimits(double minval, double maxval, int nlabs, StepHolder stepHolder){
     double diff = maxval - minval;
     double tick_range = diff / (double)nlabs;
     // make the tick range nice looking...
@@ -297,7 +341,16 @@ public class Scale implements Paintable, GGPlot.Scalable{
     return calcAxisBreaksAndLimits(minval, maxval, step);
   }
 
-  private ArrayList<String> calcAxisBreaksAndLimits(double minval, double maxval, double step){
+  public class DataGuide{
+    double dataBreak;
+    String dataLabel;
+    public DataGuide(double dataBreak, String dataLabel){
+      this.dataBreak = dataBreak;
+      this.dataLabel = dataLabel;
+    }
+  }
+
+  private ArrayList<DataGuide> calcAxisBreaksAndLimits(double minval, double maxval, double step){
     /**
      * 
      * Calculates axis breaks and suggested limits.
@@ -312,12 +365,12 @@ public class Scale implements Paintable, GGPlot.Scalable{
      *   number of labels which should be displayed on the axis
      * Default: None
      **/
-    ArrayList<String> toReturn = new ArrayList<String>();
+    ArrayList<DataGuide> toReturn = new ArrayList<DataGuide>();
     TDoubleArrayList steps = drange(minval-(step/3), maxval+(step/3), step);
     //		xRange = maxval+(step/3)-(minval-(step/3));
     System.out.println("xrange in data for plot "+xRange);
     for(int ii = 0; ii < steps.size(); ii++){
-      toReturn.add(NumberFormatter.format(steps.get(ii)));
+      toReturn.add(new DataGuide(steps.get(ii),NumberFormatter.format(steps.get(ii))));
     }
     return toReturn;
   }
@@ -348,15 +401,6 @@ public class Scale implements Paintable, GGPlot.Scalable{
     }
   }
 
-
-
-  public void setArea(int minX, int maxX, int minY, int maxY) {
-    this.minX = minX;
-    this.maxX = maxX;
-    this.minY = minY;
-    this.maxY = maxY;
-  }
-
   public void addLayer(Layer layer) {
     layers.add(layer);
   }
@@ -365,6 +409,7 @@ public class Scale implements Paintable, GGPlot.Scalable{
     double step;
 
   }
+
 
 
 }

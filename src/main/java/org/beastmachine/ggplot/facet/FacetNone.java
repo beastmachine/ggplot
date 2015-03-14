@@ -25,8 +25,9 @@ public class FacetNone extends Facet {
 
 	@Override
 	public void paint2D(Graphics2D g, Dimension2D pixels, Dimension2D points) {
-		myScale.setArea(minX,maxX,minY,maxY);
-		myScale.paint2D(g, pixels, points);
+//		myScale.paint2D(g, pixels, points);
+	  myScale.drawXTicksAndText(g, pixels, points);
+	  System.out.println("here");
 	}
 
 }

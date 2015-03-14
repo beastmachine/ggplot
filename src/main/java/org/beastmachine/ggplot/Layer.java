@@ -37,7 +37,8 @@ public class Layer {
     plotData = new DataFrame();
     for(Aes.Aesthetic aes: myAes.getSetAesthetics()){
       String val = myAes.getVariable(aes);
-      plotData.c(aes.toString(), myData.get(val));
+      
+      plotData.c(val, myData.get(val));
     }
     //TODO do stuff that isn't just the defaultData
 
