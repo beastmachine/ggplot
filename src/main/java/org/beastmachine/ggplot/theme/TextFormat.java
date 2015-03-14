@@ -86,6 +86,11 @@ public class TextFormat {
     return lineheight*pixelsPerPoint;
   }
   
+  public double getLineHeight(Graphics2D g, double pixelsPerPoint){
+    FontMetrics fm = g.getFontMetrics(this.getFont(pixelsPerPoint));
+    return fm.getHeight();
+  }
+  
   public double getLineWidth(Graphics2D g, String s, double pixelsPerPoint){
     FontMetrics fm = g.getFontMetrics(this.getFont(pixelsPerPoint));
     return fm.stringWidth(s);

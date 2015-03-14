@@ -71,11 +71,18 @@ public class LayoutManager implements Paintable {
 
     double[] plotMarginPoints = plotMargin.getPointsArray();
 
-    double plotMarginLeft = plotMarginPoints[3];
-    double plotMarginRight = plotMarginPoints[1];
-    double plotMarginTop = plotMarginPoints[0];
-    double plotMarginBottom = plotMarginPoints[2];
+    double plotMarginLeft = plotMarginPoints[3]*pixelsPerPointX;
+    double plotMarginRight = plotMarginPoints[1]*pixelsPerPointX;
+    double plotMarginTop = plotMarginPoints[0]*pixelsPerPointX;
+    double plotMarginBottom = plotMarginPoints[2]*pixelsPerPointX;
+    
 
+    //for the purpose of testing I will draw boxes for the margins
+    g.drawRect(0, 0, (int)Math.round(pixels.getWidth()), (int)Math.round(plotMarginTop)); //TODO remove
+    g.drawRect(0, (int)Math.round(pixels.getHeight()-plotMarginBottom), (int)Math.round(pixels.getWidth()), (int)Math.round(plotMarginBottom)); //TODO remove
+    g.drawRect(0, 0, (int)Math.round(plotMarginLeft), (int)Math.round(pixels.getHeight())); //TODO remove
+    g.drawRect((int)Math.round(pixels.getWidth()-plotMarginRight), 0, (int)Math.round(plotMarginRight), (int)Math.round(pixels.getHeight())); //TODO remove
+    
     /**
      * now get everythings dimensions and then compute everythings position bounds based
      * on everything else's dimensions
@@ -85,6 +92,7 @@ public class LayoutManager implements Paintable {
     Dimension2D legendRightDim = null;
     Dimension2D legendLeftDim = null;
     Dimension2D legendBottomDim = null;
+    
     Position legendPosition = theme.get(Theme.KeyPosition.legend_position);
 
     Dimension2D legendDim = this.legend.getRequiredPointsSize(g);
@@ -107,11 +115,15 @@ public class LayoutManager implements Paintable {
       Preconditions.checkState(false,"legend position not supported.");
     }
     Dimension2D ggtitleDim = pointsDimToPixelsDim(this.ggtitle.getRequiredPointsSize(g), pixelsPerPointX);
+    Dimension2D facetXStripDim = new GDimension2D(0,0);//TODO get this from facet...
+    Dimension2D facetYStripDim = new GDimension2D(0,0); //TODO get this from facet...
     Dimension2D axisTitleXDim = pointsDimToPixelsDim(this.xlab.getRequiredPointsSize(g), pixelsPerPointX);
     Unit halfLine = new Unit(UnitType.lines, 0.5);//TODO is this settable?
     axisTitleXDim.setSize(axisTitleXDim.getWidth(), axisTitleXDim.getHeight() + halfLine.getPixels(pixelsPerPointX));
     Dimension2D axisTitleYDim = pointsDimToPixelsDim(this.ylab.getRequiredPointsSize(g), pixelsPerPointX);
-    axisTitleYDim.setSize(axisTitleYDim.getWidth(), axisTitleYDim.getHeight() + halfLine.getPixels(pixelsPerPointX));
+    //this ylab is going to get rotated so
+    axisTitleYDim.setSize(axisTitleYDim.getHeight() + halfLine.getPixels(pixelsPerPointX), axisTitleYDim.getWidth());
+
 
     Dimension2D axisTextXDim = new GDimension2D(0,0);//TODO I have no idea how to get this... figure out later
     Dimension2D axisTextYDim = new GDimension2D(0,0);//TODO I have no idea how to get this... figure out later
@@ -120,7 +132,7 @@ public class LayoutManager implements Paintable {
     double axisTicksLength = theme.get(Theme.KeyUnit.axis_ticks_length).getPixels(pixelsPerPointX);
     Dimension2D axisTicksLengthDim = new GDimension2D(axisTicksLength, axisTicksLength);
 
-    
+    //LEGEND
     if(legendPosition == Position.right){
       double legendMinX = pixels.getWidth() - plotMarginRight - legendRightDim.getWidth();
       double legendMinY = plotMarginTop + ggtitleDim.getHeight();
@@ -135,7 +147,7 @@ public class LayoutManager implements Paintable {
        g.translate(-legendMinX, -legendMinY);
       }
       else{
-        Preconditions.checkState(false,"Legend vertical justification not supported, only center supported for now");
+        Preconditions.checkState(false,"Legend vertical justification not supported, only center supported for now"); //TODO maybe
       }
     }
     else if(legendPosition == Position.left){
@@ -151,7 +163,59 @@ public class LayoutManager implements Paintable {
       Preconditions.checkState(false,"legend position not supported.");
     }
 
-
+    //GGTITLE
+    double ggtitleMinY = plotMarginTop;
+    g.translate(0, ggtitleMinY);
+    ggtitle.paint2D(g, pixels, points);
+    g.translate(0, -ggtitleMinY);
+    
+    //XLAB
+    double axisTitleXMinX = plotMarginLeft + 
+        legendLeftDim.getWidth() + 
+        axisTitleYDim.getWidth() + 
+        axisTicksMarginDim.getWidth() + 
+        axisTicksLengthDim.getWidth() + 
+        axisTextYDim.getWidth() +
+        facetYStripDim.getWidth();
+    double axisTitleXMaxX = pixels.getWidth() - 
+        plotMarginRight - 
+        legendRightDim.getWidth() - 
+        axisTextYDim.getWidth();
+    double axisTitleXMinY = pixels.getHeight() -
+        plotMarginBottom -
+        legendBottomDim.getHeight() -
+        axisTitleXDim.getHeight();
+    double axisTitleXMaxY = axisTitleXMinY + axisTitleXDim.getHeight();
+    g.drawLine(0, (int)Math.round(axisTitleXMinY), (int)pixels.getWidth(), (int)Math.round(axisTitleXMinY)); //TODO remove
+    g.translate(axisTitleXMinX, axisTitleXMinY);
+    xlab.paint2D(g, new GDimension2D(axisTitleXMaxX-axisTitleXMinX, axisTitleXMaxY - axisTitleXMinY), 
+        new GDimension2D(points.getWidth() * (axisTitleXMaxX-axisTitleXMinX)/pixels.getWidth(), points.getHeight() * (axisTitleXMaxY - axisTitleXMinY)/pixels.getHeight()));
+    g.translate(-axisTitleXMinX, -axisTitleXMinY);
+    
+    //YLAB
+    double axisTitleYMinX = plotMarginLeft +
+        legendLeftDim.getWidth();
+    double axisTitleYMaxX = axisTitleYMinX + 
+        axisTitleYDim.getWidth();
+    double axisTitleYMinY = plotMarginTop +
+        ggtitleDim.getHeight() +
+        legendTopDim.getHeight() +
+        facetYStripDim.getHeight();
+    double axisTitleYMaxY = pixels.getHeight() -
+        plotMarginBottom -
+        legendBottomDim.getHeight() -
+        axisTitleXDim.getHeight() -
+        axisTextXDim.getHeight() -
+        axisTicksMarginDim.getHeight() -
+        axisTicksLengthDim.getHeight();
+    g.drawLine((int)Math.round(axisTitleYMaxX), 0, (int)Math.round(axisTitleYMaxX), (int)Math.round(pixels.getHeight()));
+    g.translate(axisTitleYMinX, axisTitleYMaxY);
+    g.rotate(-Math.PI/2.0);
+    ylab.paint2D(g, new GDimension2D(axisTitleYMaxY - axisTitleYMinY, axisTitleYMaxX - axisTitleYMinX), 
+        new GDimension2D((axisTitleYMaxY - axisTitleYMinY)/pixels.getHeight() * points.getHeight(), (axisTitleYMaxX - axisTitleYMinX)/pixels.getWidth() * points.getWidth()));
+    g.rotate(Math.PI/2.0);
+    g.translate(axisTitleYMinX, axisTitleYMaxY);
+        
 
 
     double minPointsX = 0.0;
@@ -181,9 +245,9 @@ public class LayoutManager implements Paintable {
 
 
     //print ggtitle
-    g.translate(minPixelsX, minPixelsY);
-    this.ggtitle.paint2D(g, new GDimension2D((maxPixelsX-minPixelsX), (maxPixelsY-minPixelsY)), new GDimension2D((maxPointsX-minPointsX), (maxPointsY-minPointsY)));
-    g.translate(-minPixelsX, -minPixelsY);
+//    g.translate(minPixelsX, minPixelsY);
+//    this.ggtitle.paint2D(g, new GDimension2D((maxPixelsX-minPixelsX), (maxPixelsY-minPixelsY)), new GDimension2D((maxPointsX-minPointsX), (maxPointsY-minPointsY)));
+//    g.translate(-minPixelsX, -minPixelsY);
     double lineHeight = this.ggtitle.getLineHeight(pixelsPerPointY);
     minPixelsY += lineHeight;
     minPointsY += lineHeight/pixelsPerPointY;
