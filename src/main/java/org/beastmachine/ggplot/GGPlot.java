@@ -92,7 +92,7 @@ public class GGPlot implements Paintable{
     myCoord = new CoordCartesian();
     myDefaultGeom = new GeometryPoint();
     myLayers = new ArrayList<Layer>();
-    myScale = new Scale(myCoord, myLayers);
+    myScale = new Scale(myCoord, myLayers, theme);
     myFacet = new FacetNone(theme, myScale, myCoord, myLayers);
   }
 
@@ -407,8 +407,8 @@ public class GGPlot implements Paintable{
   }
   
   public interface Scalable {
-    public int xDataPointToPixelLocation(double d);
-    public int yDataPointToPixelLocation(double d);
+    public double xDataPointToPixelLocation(double d);
+    public double yDataPointToPixelLocation(double d);
   }
 
   public GGPlot themeGrey() {

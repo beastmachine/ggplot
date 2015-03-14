@@ -208,52 +208,37 @@ public class LayoutManager implements Paintable {
         axisTextXDim.getHeight() -
         axisTicksMarginDim.getHeight() -
         axisTicksLengthDim.getHeight();
-    g.drawLine((int)Math.round(axisTitleYMaxX), 0, (int)Math.round(axisTitleYMaxX), (int)Math.round(pixels.getHeight()));
+    g.drawLine((int)Math.round(axisTitleYMaxX), 0, (int)Math.round(axisTitleYMaxX), 
+        (int)Math.round(pixels.getHeight())); //TODO remove this
     g.translate(axisTitleYMinX, axisTitleYMaxY);
     g.rotate(-Math.PI/2.0);
     ylab.paint2D(g, new GDimension2D(axisTitleYMaxY - axisTitleYMinY, axisTitleYMaxX - axisTitleYMinX), 
-        new GDimension2D((axisTitleYMaxY - axisTitleYMinY)/pixels.getHeight() * points.getHeight(), (axisTitleYMaxX - axisTitleYMinX)/pixels.getWidth() * points.getWidth()));
+        new GDimension2D((axisTitleYMaxY - axisTitleYMinY)/pixels.getHeight() * points.getHeight(), 
+            (axisTitleYMaxX - axisTitleYMinX)/pixels.getWidth() * points.getWidth()));
     g.rotate(Math.PI/2.0);
     g.translate(axisTitleYMinX, axisTitleYMaxY);
         
 
-
-    double minPointsX = 0.0;
-    double maxPointsX = points.getWidth();
-    double minPointsY = 0.0;
-    double maxPointsY = points.getHeight();
-
-    double minPixelsX = 0.0;
-    double maxPixelsX = pixels.getWidth();
-    double minPixelsY = 0.0;
-    double maxPixelsY = pixels.getHeight();
-
-
-
-    minPointsX += plotMarginLeft;
-    minPointsY += plotMarginTop;
-    maxPointsX -= plotMarginRight;
-    maxPointsY -= plotMarginBottom;
-
-    minPixelsX += plotMarginLeft*pixelsPerPointX;
-    maxPixelsX -= plotMarginRight*pixelsPerPointX;
-    minPixelsY += plotMarginTop*pixelsPerPointY;
-    maxPixelsY -= plotMarginBottom*pixelsPerPointY;
-
-    assertViablePlot(minPointsX, maxPointsX, minPointsY, maxPointsY);
-
-
-
-    //print ggtitle
-//    g.translate(minPixelsX, minPixelsY);
-//    this.ggtitle.paint2D(g, new GDimension2D((maxPixelsX-minPixelsX), (maxPixelsY-minPixelsY)), new GDimension2D((maxPointsX-minPointsX), (maxPointsY-minPointsY)));
-//    g.translate(-minPixelsX, -minPixelsY);
-    double lineHeight = this.ggtitle.getLineHeight(pixelsPerPointY);
-    minPixelsY += lineHeight;
-    minPointsY += lineHeight/pixelsPerPointY;
-
-    //TODO I need to do the facet strip here but for the moment I'll assume no facet
-
+    double facetMinY = plotMarginTop +
+        ggtitleDim.getHeight() + 
+        legendTopDim.getHeight();
+    double facetMinX = plotMarginRight +
+        legendLeftDim.getWidth() +
+        axisTitleYDim.getWidth();
+    double facetMaxY = pixels.getHeight() -
+        plotMarginBottom -
+        legendBottomDim.getHeight() -
+        axisTextXDim.getHeight();
+    double facetMaxX = pixels.getWidth() -
+        plotMarginRight -
+        legendRightDim.getWidth();
+    
+    g.translate(facetMinX, facetMinY);
+    this.facet.paint2D(g, new GDimension2D(facetMaxX-facetMinX, facetMaxY-facetMinY), 
+          new GDimension2D((facetMaxX-facetMinX)/pixels.getWidth() * points.getWidth(), 
+              (facetMaxY-facetMinY)/pixels.getHeight()*points.getHeight()));
+    g.translate(-facetMinX, -facetMinY);
+        
     //    Dimension2D legendDim = this.legend.getRequiredPointsSize(g);
     //    if(legendPosition == Position.right){
     //      maxPointsX -= legendDim.getWidth();

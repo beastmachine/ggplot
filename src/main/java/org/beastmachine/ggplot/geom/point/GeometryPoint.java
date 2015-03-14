@@ -31,7 +31,7 @@ public class GeometryPoint extends Geometry {
 				g.setColor(Colors.black);//TODO pull this from somewhere else;
 				int diameter = 3;
 				
-				g.fillOval(scale.xDataPointToPixelLocation(x.getValue(ii))-(diameter/2), scale.yDataPointToPixelLocation(y.getValue(ii))-(diameter/2), diameter, diameter);//TODO grab these size values from theme
+				g.fillOval((int)Math.round(scale.xDataPointToPixelLocation(x.getValue(ii))-(diameter/2)), (int)Math.round(scale.yDataPointToPixelLocation(y.getValue(ii))-(diameter/2)), diameter, diameter);//TODO grab these size values from theme
 			}
 			else{
 				Preconditions.checkArgument(false,"only \"circle\" is supported for geom_point shape right now");
