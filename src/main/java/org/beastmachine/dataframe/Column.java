@@ -6,6 +6,7 @@ import gnu.trove.list.array.TFloatArrayList;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.list.array.TLongArrayList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -155,6 +156,13 @@ public abstract class Column {
 	 * @return
 	 */
 	public abstract String getLabel(int index);
+	
+	/**
+	 * Gets a list of the labels of a column
+	 * Only use on factor column (use isFactor())
+	 * @return
+	 */
+	public abstract List<String> getLabels();
 	
 	/**
 	 * Gets the integer factor value of the index'th value of a factor column.
@@ -510,6 +518,12 @@ public abstract class Column {
 	    return data.length;
     }
 
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
+
 	}
 	
 	private static class ColumnOInt extends Column{
@@ -547,6 +561,12 @@ public abstract class Column {
     public int nRows() {
 	    return data.length;
     }
+
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
 		
 	}
 	
@@ -583,6 +603,12 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
+    }
+
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
     }
 		
 	}
@@ -622,6 +648,12 @@ public abstract class Column {
     public int nRows() {
 	    return data.length;
     }
+
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
 		
 	}
 	
@@ -658,6 +690,12 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
+    }
+
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
     }
 
 	}
@@ -698,6 +736,12 @@ public abstract class Column {
 	    return data.length;
     }
 
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
+
 	}
 
 	private static class ColumnPFloat extends Column {
@@ -733,6 +777,12 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
+    }
+
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
     }
 
 	}
@@ -773,6 +823,12 @@ public abstract class Column {
 	    return data.length;
     }
 
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
+
 	}
 	
 	private static class ColumnPDouble extends Column {
@@ -810,6 +866,12 @@ public abstract class Column {
 	    return data.length;
     }
 
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
+
 	}
 	private static class ColumnODouble extends Column {
 
@@ -845,6 +907,12 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
+    }
+
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
     }
 
 	}
@@ -896,6 +964,11 @@ public abstract class Column {
 	    return data.length;
     }
 
+    @Override
+    public List<String> getLabels() {
+      return new ArrayList<String>(mapping.keySet());
+    }
+
 	}
 	
 	private static class ColumnPBoolean extends Column {
@@ -933,6 +1006,14 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
+    }
+
+    @Override
+    public List<String> getLabels() {
+      ArrayList<String> ret = new ArrayList<String>();
+      ret.add("True");
+      ret.add("False");
+      return ret;
     }
 
 	}
@@ -976,8 +1057,17 @@ public abstract class Column {
 	    return data.length;
     }
 
+    @Override
+    public List<String> getLabels() {
+      ArrayList<String> ret = new ArrayList<String>();
+      ret.add("True");
+      ret.add("False");
+      return ret;
+    }
+
   }
 	
+	//TODO a byte can really be both factor and numeric, should support that
 	private static class ColumnPByte extends Column {
 
 		private byte[] data;
@@ -1013,7 +1103,15 @@ public abstract class Column {
 	    return data.length;
     }
 
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
+
   }
+	
+	//TODO byte should be able to be both factor and numeric
 	private static class ColumnOByte extends Column {
 
 		private Byte[] data;
@@ -1048,6 +1146,12 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.length;
+    }
+
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
     }
 
   }
@@ -1100,6 +1204,11 @@ public abstract class Column {
 	    return data.size();
     }
 
+    @Override
+    public List<String> getLabels() {
+      return new ArrayList<String>(mapping.keySet());
+    }
+
   }
 	
 	private static class ColumnLInt extends Column {
@@ -1137,8 +1246,15 @@ public abstract class Column {
 	    return data.size();
     }
 
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
+
   }
 	
+	//TODO byte should be able to be both numeric and factor
 	private static class ColumnLByte extends Column {
 
 		private TByteArrayList data;
@@ -1172,6 +1288,12 @@ public abstract class Column {
 		@Override
     public int nRows() {
 	    return data.size();
+    }
+
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
     }
 
   }
@@ -1212,6 +1334,12 @@ public abstract class Column {
 	    return data.size();
     }
 
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
+
   }
 	
 	private static class ColumnLDouble extends Column {
@@ -1249,6 +1377,12 @@ public abstract class Column {
 	    return data.size();
     }
 
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
+
   }
 	
 	private static class ColumnLLong extends Column {
@@ -1284,6 +1418,14 @@ public abstract class Column {
 	    return data.size();
     }
 
+    @Override
+    public List<String> getLabels() {
+      checkArgument(false,"cannot call getLabels on numeric");
+      return null;
+    }
+
   }
+
+
 
 }
